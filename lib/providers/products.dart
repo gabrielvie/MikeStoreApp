@@ -40,6 +40,10 @@ class ProductsProvider extends ChangeNotifier {
 
   List<Product> get items => [..._items];
 
+  Product findByUuid(String uuid) {
+    return _items.firstWhere((product) => product.uuid == uuid);
+  }
+
   void addProduct(Product product) {
     _items.add(product);
     notifyListeners();
