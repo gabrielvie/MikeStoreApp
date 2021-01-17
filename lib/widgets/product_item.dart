@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shopapp/models/product.dart';
+import 'package:shopapp/screens/products_details_screen.dart';
 
 class ProductItem extends StatelessWidget {
   final Product product;
@@ -13,9 +14,17 @@ class ProductItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: GridTile(
-        child: Image.network(
-          product.imageUrl,
-          fit: BoxFit.cover,
+        child: GestureDetector(
+          child: Image.network(
+            product.imageUrl,
+            fit: BoxFit.cover,
+          ),
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              ProductsDetailsScreen.routeName,
+              arguments: product.uuid,
+            );
+          },
         ),
         header: Container(
           alignment: Alignment.topLeft,
