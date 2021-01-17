@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shopapp/screens/products_details_screen.dart';
-import 'package:shopapp/screens/products_overview_screen.dart';
+
+import 'package:shopapp/screens/products_details.dart';
+import 'package:shopapp/screens/products_overview.dart';
 import 'package:shopapp/utils/constants.dart';
 
 void main() {
@@ -21,17 +22,5 @@ class MyApp extends StatelessWidget {
         ProductsDetailsScreen.routeName: (context) => ProductsDetailsScreen(),
       },
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return ProductsOverviewScreen();
   }
 }

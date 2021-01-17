@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shopapp/models/product.dart';
-import 'package:shopapp/screens/products_details_screen.dart';
+import 'package:shopapp/screens/products_details.dart';
 
 class ProductItem extends StatelessWidget {
   final Product product;
