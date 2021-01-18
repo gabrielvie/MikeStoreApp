@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 
 import 'package:shopapp/providers/product.dart';
@@ -19,9 +17,11 @@ class CartItem {
 }
 
 class CartProvider with ChangeNotifier {
-  Map<String, CartItem> _items;
+  Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items => _items;
+
+  int get itemCount => _items.length;
 
   void addItem(Product product) {
     if (_items.containsKey(product.uuid)) {
@@ -45,5 +45,7 @@ class CartProvider with ChangeNotifier {
         ),
       );
     }
+
+    notifyListeners();
   }
 }
