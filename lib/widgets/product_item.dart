@@ -8,7 +8,7 @@ import 'package:shopapp/screens/products_details.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Product product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
@@ -27,11 +27,14 @@ class ProductItem extends StatelessWidget {
         ),
         header: Container(
           alignment: Alignment.topLeft,
-          child: IconButton(
-            icon: product.isDesired
-                ? Icon(Icons.favorite, color: Colors.red)
-                : Icon(Icons.favorite_outline, color: Colors.black54),
-            onPressed: () => product.toogleFavoriteStatus(),
+          // Rebuilds only this part of code if product changes.
+          child: Consumer<Product>(
+            builder: (context, product, child) => IconButton(
+              icon: product.isDesired
+                  ? Icon(Icons.favorite, color: Colors.red)
+                  : Icon(Icons.favorite_outline, color: Colors.black54),
+              onPressed: () => product.toogleFavoriteStatus(),
+            ),
           ),
         ),
         footer: GridTileBar(
