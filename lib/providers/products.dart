@@ -38,7 +38,18 @@ class ProductsProvider extends ChangeNotifier {
     ),
   ];
 
-  List<Product> get items => [..._items];
+  // bool _showDesiredOnly = false;
+
+  List<Product> get items => _items;
+
+  List<Product> get desiredItems =>
+      _items.where((product) => product.isDesired).toList();
+  // if (_showDesiredOnly) {
+  //   return _items.where((product) => product.isDesired);
+  // }
+
+  //   return _items;
+  // }
 
   Product findByUuid(String uuid) {
     return _items.firstWhere((product) => product.uuid == uuid);

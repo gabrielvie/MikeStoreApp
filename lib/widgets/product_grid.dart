@@ -5,11 +5,17 @@ import 'package:shopapp/providers/products.dart';
 import 'package:shopapp/widgets/product_item.dart';
 
 class ProductsGrid extends StatelessWidget {
+  final bool showOnlyDesired;
+
+  ProductsGrid({this.showOnlyDesired = false});
+
   @override
   Widget build(BuildContext context) {
     final productsProvider =
         Provider.of<ProductsProvider>(context, listen: false);
-    final products = productsProvider.items;
+    final products = showOnlyDesired
+        ? productsProvider.desiredItems
+        : productsProvider.items;
 
     return GridView.builder(
       padding: const EdgeInsets.all(10),
