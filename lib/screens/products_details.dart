@@ -9,12 +9,46 @@ class ProductsDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productUuid = ModalRoute.of(context).settings.arguments as String;
-    final productProvider = Provider.of<ProductsProvider>(context);
-    final product = productProvider.findByUuid(productUuid);
+    final product = Provider.of<ProductsProvider>(
+      context,
+      listen: false,
+    ).findByUuid(productUuid);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(product.title),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 300,
+              width: double.infinity,
+              child: Image.network(
+                product.imageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              '\$${product.price.toStringAsFixed(2)}',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              width: double.infinity,
+              child: Text(
+                product.description,
+                textAlign: TextAlign.center,
+                softWrap: true,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
