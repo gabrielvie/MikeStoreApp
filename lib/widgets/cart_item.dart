@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopapp/providers/cart.dart';
 
 class CartItem extends StatelessWidget {
   final String uuid;
+  final String productUuid;
   final double price;
   final int quantity;
   final String title;
@@ -9,6 +12,7 @@ class CartItem extends StatelessWidget {
   const CartItem({
     Key key,
     this.uuid,
+    this.productUuid,
     this.price,
     this.quantity,
     this.title,
@@ -16,26 +20,46 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: Theme.of(context).accentColor,
-            child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: FittedBox(
-                child: Text(
-                  '\$${price.toStringAsFixed(2)}',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
+    return Dismissible(
+      key: ValueKey(uuid),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        margin: const EdgeInsets.only(right: 15, top: 5, bottom: 5),
+        padding: const EdgeInsets.only(right: 10),
+        alignment: AlignmentDirectional.centerEnd,
+        decoration: BoxDecoration(
+          color: Theme.of(context).errorColor,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Icon(
+          Icons.delete,
+          color: Colors.white,
+        ),
+      ),
+      onDismissed: (_) {
+        Provider.of<CartProvider>(context).removeItem(productUuid);
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Theme.of(context).accentColor,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: FittedBox(
+                  child: Text(
+                    '\$${price.toStringAsFixed(2)}',
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                 ),
               ),
             ),
+            title: Text(title),
+            subtitle: Text('Total: \$${(price * quantity)}'),
+            trailing: Text('$quantity x'),
           ),
-          title: Text(title),
-          subtitle: Text('Total: \$${(price * quantity)}'),
-          trailing: Text('$quantity x'),
         ),
       ),
     );
