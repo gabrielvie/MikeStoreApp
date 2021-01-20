@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: Constants.appName,
-        theme: Constants.lightTheme,
+        theme: Constants.darkTheme,
         initialRoute: ProductsOverviewScreen.routeName,
         routes: {
           ProductsOverviewScreen.routeName: (_) => ProductsOverviewScreen(),
