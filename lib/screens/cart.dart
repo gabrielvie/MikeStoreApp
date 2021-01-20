@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:shopapp/providers/cart.dart' show CartProvider;
 import 'package:shopapp/providers/orders.dart';
+import 'package:shopapp/widgets/app_drawer.dart';
 import 'package:shopapp/widgets/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
@@ -15,6 +16,7 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Your Cart'),
       ),
+      drawer: AppDrawer(),
       body: Column(
         children: <Widget>[
           Card(
