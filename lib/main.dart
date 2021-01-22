@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:shopapp/providers/cart.dart';
 import 'package:shopapp/providers/orders.dart';
 import 'package:shopapp/screens/cart.dart';
 import 'package:shopapp/screens/orders.dart';
-
 import 'package:shopapp/screens/products_details.dart';
+import 'package:shopapp/screens/products_edit.dart';
 import 'package:shopapp/screens/products_overview.dart';
 import 'package:shopapp/providers/products.dart';
+import 'package:shopapp/screens/user_products.dart';
 import 'package:shopapp/utils/constants.dart';
 
 void main() {
@@ -29,10 +31,12 @@ class MyApp extends StatelessWidget {
         theme: Constants.lightTheme,
         initialRoute: ProductsOverviewScreen.routeName,
         routes: {
+          CartScreen.routeName: (_) => CartScreen(),
           ProductsOverviewScreen.routeName: (_) => ProductsOverviewScreen(),
           ProductsDetailsScreen.routeName: (_) => ProductsDetailsScreen(),
-          CartScreen.routeName: (_) => CartScreen(),
+          ProductsEditScreen.routeName: (_) => ProductsEditScreen(),
           OrdersScreen.routeName: (_) => OrdersScreen(),
+          UserProductsScreen.routeName: (_) => UserProductsScreen(),
         },
       ),
     );
