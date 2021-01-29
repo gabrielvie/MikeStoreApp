@@ -10,6 +10,13 @@ class ProductsEditScreen extends StatefulWidget {
 class _ProductsEditScreenState extends State<ProductsEditScreen> {
   @override
   Widget build(BuildContext context) {
+    final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Theme.of(context).accentColor,
+        width: 2.0,
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Product'),
@@ -19,9 +26,31 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
         child: Form(
           child: ListView(
             children: <Widget>[
+              SizedBox(height: 20),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  focusedBorder: outlineInputBorder,
+                ),
                 textInputAction: TextInputAction.next,
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Price',
+                  focusedBorder: outlineInputBorder,
+                ),
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  focusedBorder: outlineInputBorder,
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: 3,
               ),
             ],
           ),
