@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 class Product with ChangeNotifier {
-  final String uuid;
-  final String title;
-  final String imageUrl;
-  final String description;
-  final double price;
+  String uuid;
+  String title;
+  String imageUrl;
+  String description;
+  double price;
   bool isDesired;
 
   Product(

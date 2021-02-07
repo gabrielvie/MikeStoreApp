@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:shopapp/providers/product.dart';
+import 'package:uuid/uuid.dart';
 
 class ProductsProvider extends ChangeNotifier {
   List<Product> _items = [
@@ -56,7 +57,20 @@ class ProductsProvider extends ChangeNotifier {
   }
 
   void addProduct(Product product) {
+    product.uuid = Uuid().v4();
     _items.add(product);
+    print(product);
+    notifyListeners();
+  }
+
+  void updateProduct(Product productToUpdate) {
+    final index =
+        _items.indexWhere((product) => productToUpdate.uuid == product.uuid);
+
+    if (index >= 0) {
+      _items[index] = productToUpdate;
+    }
+
     notifyListeners();
   }
 }
