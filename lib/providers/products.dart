@@ -73,4 +73,9 @@ class ProductsProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void deleteProduct(String uuid) {
+    _items.removeWhere((product) => product.uuid == uuid);
+    notifyListeners();
+  }
 }
