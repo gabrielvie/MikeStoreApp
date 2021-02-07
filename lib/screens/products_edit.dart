@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:shopapp/providers/product.dart';
+import 'package:shopapp/providers/products.dart';
 import 'package:shopapp/utils/constants.dart';
 
 enum FormFields {
@@ -264,6 +267,9 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
     }
 
     _productForm.currentState.save();
+    Provider.of<ProductsProvider>(context, listen: false)
+        .addProduct(_editedProduct);
+    Navigator.of(context).pop();
   }
 
   String _validateForm(FormFields field, String value) {
@@ -290,6 +296,13 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
       case FormFields.ImageUrl:
         if (value.isEmpty) {
           validationMessage = 'The image URL field is required.';
+        } else if (!value.startsWith('http') && !value.startsWith('https')) {
+          validationMessage = 'Provide a valid url.';
+        } else if (!value.endsWith('.png') &&
+            !value.endsWith('.jpg') &&
+            !value.endsWith('.jpeg')) {
+          validationMessage =
+              'Provid a valid image url. Valid formats: .jpg, .jpeg, .png';
         }
         break;
     }
