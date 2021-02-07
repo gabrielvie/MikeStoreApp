@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:shopapp/providers/product.dart';
 import 'package:shopapp/utils/constants.dart';
 
+enum FormFields {
+  Title,
+  Price,
+  Description,
+  ImageUrl,
+}
+
 class ProductsEditScreen extends StatefulWidget {
   static const String routeName = '/product-edit';
 
@@ -67,7 +74,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: _saveProduct,
+            onPressed: _saveForm,
           ),
         ],
       ),
@@ -104,6 +111,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
                     price: _editedProduct.price,
                   );
                 },
+                validator: (value) => _validateForm(FormFields.Title, value),
               ),
               SizedBox(height: 20),
               TextFormField(
@@ -133,6 +141,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
                     price: double.parse(value),
                   );
                 },
+                validator: (value) => _validateForm(FormFields.Price, value),
               ),
               SizedBox(height: 20),
               TextFormField(
@@ -162,6 +171,8 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
                     price: _editedProduct.price,
                   );
                 },
+                validator: (value) =>
+                    _validateForm(FormFields.Description, value),
               ),
               SizedBox(height: 20),
               Row(
@@ -224,8 +235,10 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
                         );
                       },
                       onFieldSubmitted: (_) {
-                        _saveProduct();
+                        _saveForm();
                       },
+                      validator: (value) =>
+                          _validateForm(FormFields.ImageUrl, value),
                     ),
                   ),
                 ],
@@ -243,7 +256,44 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
     }
   }
 
-  void _saveProduct() {
+  void _saveForm() {
+    final isValid = _productForm.currentState.validate();
+
+    if (!isValid) {
+      return;
+    }
+
     _productForm.currentState.save();
+  }
+
+  String _validateForm(FormFields field, String value) {
+    String validationMessage;
+
+    switch (field) {
+      case FormFields.Title:
+        if (value.isEmpty) {
+          validationMessage = 'The title field is required.';
+        }
+        break;
+      case FormFields.Price:
+        if (value.isEmpty) {
+          validationMessage = 'The price field is required.';
+        } else if (double.parse(value) <= 0) {
+          validationMessage = 'The price must be grater than 0.';
+        }
+        break;
+      case FormFields.Description:
+        if (value.isEmpty) {
+          validationMessage = 'The description field is required.';
+        }
+        break;
+      case FormFields.ImageUrl:
+        if (value.isEmpty) {
+          validationMessage = 'The image URL field is required.';
+        }
+        break;
+    }
+
+    return validationMessage;
   }
 }
