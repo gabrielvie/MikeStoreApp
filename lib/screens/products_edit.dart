@@ -87,7 +87,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
         width: 2.0,
       ),
     );
-    print(_editedProduct.price);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Product'),
@@ -264,7 +264,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
     }
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     final isValid = _productForm.currentState.validate();
 
     if (!isValid) {
@@ -279,12 +279,30 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
     if (_editedProduct.id != null) {
       productsProvider.updateProduct(_editedProduct);
     } else {
-      productsProvider.addProduct(_editedProduct).then((_) {
+      try {
+        await productsProvider.addProduct(_editedProduct);
+      } catch (error) {
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('An error occurred!'),
+            content: Text('Something went wrong.'),
+            actions: <Widget>[
+              FlatButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      } finally {
         setState(() {
           _isLoading = false;
         });
         Navigator.of(context).pop();
-      });
+      }
     }
   }
 

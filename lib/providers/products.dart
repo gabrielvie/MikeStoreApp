@@ -21,7 +21,7 @@ class ProductsProvider extends ChangeNotifier {
 
   List<Product> get items {
     const serverUrl =
-        'https://mikestore-gabrielvie-default-rtdb.firebaseio.com/products.json';
+        'https://shopapp-gabrielvie-default-rtdb.firebaseio.com/products.json';
 
     http.get(serverUrl).then((response) {
       print(response.body);
@@ -37,18 +37,20 @@ class ProductsProvider extends ChangeNotifier {
     return _items.firstWhere((product) => product.id == id);
   }
 
-  Future<void> addProduct(Product product) {
+  Future<void> addProduct(Product product) async {
     const serverUrl =
-        'https://mikestore-gabrielvie-default-rtdb.firebaseio.com/products.json';
+        'https://shopapp-gabrielvie-default-rtdb.firebaseio.com/products.json';
 
-    return http.post(serverUrl, body: product.toJson()).then((response) {
-      var decodedBody = json.decode(response.body);
+    try {
+      final response = await http.post(serverUrl, body: product.toJson());
+      final decodedBody = json.decode(response.body);
 
       product.id = decodedBody['name'];
       _items.add(product);
-      print(product);
-      notifyListeners();
-    });
+    } catch (error) {
+      throw error;
+    }
+    notifyListeners();
   }
 
   void updateProduct(Product productToUpdate) {
