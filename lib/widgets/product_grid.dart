@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopapp/providers/products.dart';
+import 'package:mikestore/providers/products.dart';
 
-import 'package:shopapp/widgets/product_item.dart';
+import 'package:mikestore/widgets/product_item.dart';
 
 class ProductsGrid extends StatelessWidget {
   final bool showOnlyDesired;

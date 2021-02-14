@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:shopapp/providers/cart.dart';
-import 'package:shopapp/providers/orders.dart';
-import 'package:shopapp/screens/cart.dart';
-import 'package:shopapp/screens/orders.dart';
-import 'package:shopapp/screens/products_details.dart';
-import 'package:shopapp/screens/products_edit.dart';
-import 'package:shopapp/screens/products_overview.dart';
-import 'package:shopapp/providers/products.dart';
-import 'package:shopapp/screens/user_products.dart';
-import 'package:shopapp/utils/constants.dart';
+import 'package:mikestore/providers/cart.dart';
+import 'package:mikestore/providers/orders.dart';
+import 'package:mikestore/screens/cart.dart';
+import 'package:mikestore/screens/orders.dart';
+import 'package:mikestore/screens/products_details.dart';
+import 'package:mikestore/screens/products_edit.dart';
+import 'package:mikestore/screens/products_overview.dart';
+import 'package:mikestore/providers/products.dart';
+import 'package:mikestore/screens/user_products.dart';
+import 'package:mikestore/utils/constants.dart';
 
 void main() {
   runApp(MyApp());

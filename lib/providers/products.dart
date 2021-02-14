@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:shopapp/providers/product.dart';
+import 'package:mikestore/providers/product.dart';
 
 class ProductsProvider extends ChangeNotifier {
   List<Product> _items = [
@@ -21,7 +21,7 @@ class ProductsProvider extends ChangeNotifier {
 
   List<Product> get items {
     const serverUrl =
-        'https://shopapp-gabrielvie-default-rtdb.firebaseio.com/products.json';
+        'https://mikestore-gabrielvie-default-rtdb.firebaseio.com/products.json';
 
     http.get(serverUrl).then((response) {
       print(response.body);
@@ -39,7 +39,7 @@ class ProductsProvider extends ChangeNotifier {
 
   Future<void> addProduct(Product product) {
     const serverUrl =
-        'https://shopapp-gabrielvie-default-rtdb.firebaseio.com/products.json';
+        'https://mikestore-gabrielvie-default-rtdb.firebaseio.com/products.json';
 
     return http.post(serverUrl, body: product.toJson()).then((response) {
       var decodedBody = json.decode(response.body);

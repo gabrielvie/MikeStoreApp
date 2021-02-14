@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:shopapp/providers/product.dart';
+import 'package:mikestore/providers/product.dart';
 
 class CartItem {
   final String uuid;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:shopapp/providers/product.dart';
-import 'package:shopapp/providers/products.dart';
-import 'package:shopapp/utils/constants.dart';
+import 'package:mikestore/providers/product.dart';
+import 'package:mikestore/providers/products.dart';
+import 'package:mikestore/utils/constants.dart';
 
 enum FormFields {
   Title,
