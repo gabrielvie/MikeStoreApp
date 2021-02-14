@@ -6,7 +6,7 @@ import 'package:uuid/uuid.dart';
 class ProductsProvider extends ChangeNotifier {
   List<Product> _items = [
     Product(
-      'p1',
+      id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
       price: 29.99,
@@ -52,8 +52,8 @@ class ProductsProvider extends ChangeNotifier {
   //   return _items;
   // }
 
-  Product findByUuid(String uuid) {
-    return _items.firstWhere((product) => product.uuid == uuid);
+  Product findById(String id) {
+    return _items.firstWhere((product) => product.id == id);
   }
 
   void addProduct(Product product) {
@@ -65,7 +65,7 @@ class ProductsProvider extends ChangeNotifier {
 
   void updateProduct(Product productToUpdate) {
     final index =
-        _items.indexWhere((product) => productToUpdate.uuid == product.uuid);
+        _items.indexWhere((product) => productToUpdate.id == product.id);
 
     if (index >= 0) {
       _items[index] = productToUpdate;
@@ -74,8 +74,8 @@ class ProductsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteProduct(String uuid) {
-    _items.removeWhere((product) => product.uuid == uuid);
+  void deleteProduct(String id) {
+    _items.removeWhere((product) => product.id == id);
     notifyListeners();
   }
 }

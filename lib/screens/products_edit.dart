@@ -26,7 +26,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
   FocusNode _descriptionFocusNode;
 
   Product _editedProduct = Product(
-    null,
+    id: null,
     title: '',
     imageUrl: '',
     description: '',
@@ -67,11 +67,10 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      final productUuid = ModalRoute.of(context).settings.arguments as String;
-      print(productUuid);
-      if (productUuid != null) {
+      final productId = ModalRoute.of(context).settings.arguments as String;
+      if (productId != null) {
         _editedProduct =
-            Provider.of<ProductsProvider>(context).findByUuid(productUuid);
+            Provider.of<ProductsProvider>(context).findById(productId);
         _imageUrlController.text = _editedProduct.imageUrl;
       }
     }
@@ -265,7 +264,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
 
     _productForm.currentState.save();
     ProductsProvider productsProvider = Provider.of(context);
-    if (_editedProduct.uuid != null) {
+    if (_editedProduct.id != null) {
       productsProvider.updateProduct(_editedProduct);
     } else {
       productsProvider.addProduct(_editedProduct);

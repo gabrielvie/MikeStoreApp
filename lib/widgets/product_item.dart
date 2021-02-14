@@ -23,7 +23,7 @@ class ProductItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(
               ProductsDetailsScreen.routeName,
-              arguments: product.uuid,
+              arguments: product.id,
             );
           },
         ),
@@ -57,8 +57,7 @@ class ProductItem extends StatelessWidget {
                   duration: Duration(seconds: 2),
                   action: SnackBarAction(
                     label: 'Undo',
-                    onPressed: () =>
-                        cartProvider.removeSingleItem(product.uuid),
+                    onPressed: () => cartProvider.removeSingleItem(product.id),
                   ),
                 ),
               );

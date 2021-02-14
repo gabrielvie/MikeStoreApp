@@ -33,9 +33,9 @@ class CartProvider with ChangeNotifier {
   }
 
   void addItem(Product product) {
-    if (_items.containsKey(product.uuid)) {
+    if (_items.containsKey(product.id)) {
       _items.update(
-        product.uuid,
+        product.id,
         (cartItem) => CartItem(
           cartItem.uuid,
           title: cartItem.title,
@@ -45,7 +45,7 @@ class CartProvider with ChangeNotifier {
       );
     } else {
       _items.putIfAbsent(
-        product.uuid,
+        product.id,
         () => CartItem(
           DateTime.now().toString(),
           title: product.title,
