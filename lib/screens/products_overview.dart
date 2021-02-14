@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:mikestore/utils/constants.dart';
 import 'package:mikestore/providers/cart.dart';
 import 'package:mikestore/screens/cart.dart';
 import 'package:mikestore/widgets/app_drawer.dart';
 import 'package:mikestore/widgets/badge.dart';
-
 import 'package:mikestore/widgets/product_grid.dart';
 
 enum FilterOptions {
@@ -27,8 +28,8 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     var scaffold = Scaffold(
       appBar: AppBar(
         title: _showOnlyDesired
-            ? const Text('mikestore - Favorites')
-            : const Text('mikestore - All'),
+            ? Text(Constants.appName + ' - Favorites')
+            : Text(Constants.appName + ' - All'),
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions filterOption) {
