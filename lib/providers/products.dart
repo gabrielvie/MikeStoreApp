@@ -37,11 +37,11 @@ class ProductsProvider extends ChangeNotifier {
     return _items.firstWhere((product) => product.id == id);
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     const serverUrl =
         'https://shopapp-gabrielvie-default-rtdb.firebaseio.com/products.json';
 
-    http.post(serverUrl, body: product.toJson()).then((response) {
+    return http.post(serverUrl, body: product.toJson()).then((response) {
       var decodedBody = json.decode(response.body);
 
       product.id = decodedBody['name'];

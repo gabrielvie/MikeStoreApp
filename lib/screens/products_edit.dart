@@ -34,6 +34,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
   );
 
   bool _isInit = true;
+  bool _isLoading = false;
 
   final _imageUrlController = TextEditingController();
   final _productForm = GlobalKey<FormState>();
@@ -86,7 +87,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
         width: 2.0,
       ),
     );
-
+    print(_editedProduct.price);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Product'),
@@ -97,155 +98,163 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _productForm,
-          child: ListView(
-            children: <Widget>[
-              SizedBox(height: 20),
-              TextFormField(
-                initialValue: _editedProduct.title,
-                decoration: InputDecoration(
-                  labelText: 'Title',
-                  focusedBorder: outlineInputBorder,
-                  labelStyle: TextStyle(
-                    color: _titleFocusNode.hasFocus
-                        ? Theme.of(context).accentColor
-                        : Constants.darkBG,
-                  ),
-                ),
-                textInputAction: TextInputAction.next,
-                focusNode: _titleFocusNode,
-                onTap: () {
-                  setState(() {
-                    FocusScope.of(context).requestFocus(_titleFocusNode);
-                  });
-                },
-                onSaved: (value) {
-                  _editedProduct.title = value;
-                },
-                validator: (value) => _validateForm(FormFields.Title, value),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                initialValue: _editedProduct.price.toString(),
-                decoration: InputDecoration(
-                  labelText: 'Price',
-                  focusedBorder: outlineInputBorder,
-                  labelStyle: TextStyle(
-                    color: _priceFocusNode.hasFocus
-                        ? Theme.of(context).accentColor
-                        : Constants.darkBG,
-                  ),
-                ),
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
-                focusNode: _priceFocusNode,
-                onTap: () {
-                  setState(() {
-                    FocusScope.of(context).requestFocus(_priceFocusNode);
-                  });
-                },
-                onSaved: (value) {
-                  _editedProduct.price = double.parse(value);
-                },
-                validator: (value) => _validateForm(FormFields.Price, value),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                initialValue: _editedProduct.description,
-                decoration: InputDecoration(
-                  labelText: 'Description',
-                  focusedBorder: outlineInputBorder,
-                  labelStyle: TextStyle(
-                    color: _descriptionFocusNode.hasFocus
-                        ? Theme.of(context).accentColor
-                        : Constants.darkBG,
-                  ),
-                ),
-                keyboardType: TextInputType.multiline,
-                maxLines: 3,
-                focusNode: _descriptionFocusNode,
-                onTap: () {
-                  setState(() {
-                    FocusScope.of(context).requestFocus(_descriptionFocusNode);
-                  });
-                },
-                onSaved: (value) {
-                  _editedProduct.description = value;
-                },
-                validator: (value) =>
-                    _validateForm(FormFields.Description, value),
-              ),
-              SizedBox(height: 20),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-                    width: 100,
-                    height: 100,
-                    margin: const EdgeInsets.only(top: 8, right: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: _imageUrlFocusNode.hasFocus
-                            ? Theme.of(context).accentColor
-                            : Constants.darkBG,
-                        width: 1,
-                      ),
-                    ),
-                    child: _imageUrlController.text.isEmpty
-                        ? Text(
-                            "Enter a URL",
-                            style: TextStyle(
-                              color: _imageUrlFocusNode.hasFocus
-                                  ? Theme.of(context).accentColor
-                                  : Constants.darkBG,
-                            ),
-                          )
-                        : FittedBox(
-                            child: Image.network(_imageUrlController.text),
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      // initialValue: _editedProduct.imageUrl,
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _productForm,
+                child: ListView(
+                  children: <Widget>[
+                    SizedBox(height: 20),
+                    TextFormField(
+                      initialValue: _editedProduct.title,
                       decoration: InputDecoration(
-                        labelText: 'Image URL',
+                        labelText: 'Title',
                         focusedBorder: outlineInputBorder,
                         labelStyle: TextStyle(
-                          color: _imageUrlFocusNode.hasFocus
+                          color: _titleFocusNode.hasFocus
                               ? Theme.of(context).accentColor
                               : Constants.darkBG,
                         ),
                       ),
-                      keyboardType: TextInputType.url,
-                      textInputAction: TextInputAction.done,
-                      controller: _imageUrlController,
-                      focusNode: _imageUrlFocusNode,
+                      textInputAction: TextInputAction.next,
+                      focusNode: _titleFocusNode,
                       onTap: () {
                         setState(() {
-                          FocusScope.of(context)
-                              .requestFocus(_imageUrlFocusNode);
+                          FocusScope.of(context).requestFocus(_titleFocusNode);
                         });
                       },
                       onSaved: (value) {
-                        _editedProduct.imageUrl = value;
-                      },
-                      onFieldSubmitted: (_) {
-                        _saveForm();
+                        _editedProduct.title = value;
                       },
                       validator: (value) =>
-                          _validateForm(FormFields.ImageUrl, value),
+                          _validateForm(FormFields.Title, value),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 20),
+                    TextFormField(
+                      initialValue: _editedProduct.price <= 0
+                          ? null // Added to not provide 0.0 if price doesn't exists.
+                          : _editedProduct.price.toString(),
+                      decoration: InputDecoration(
+                        labelText: 'Price',
+                        focusedBorder: outlineInputBorder,
+                        labelStyle: TextStyle(
+                          color: _priceFocusNode.hasFocus
+                              ? Theme.of(context).accentColor
+                              : Constants.darkBG,
+                        ),
+                      ),
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.number,
+                      focusNode: _priceFocusNode,
+                      onTap: () {
+                        setState(() {
+                          FocusScope.of(context).requestFocus(_priceFocusNode);
+                        });
+                      },
+                      onSaved: (value) {
+                        _editedProduct.price = double.parse(value);
+                      },
+                      validator: (value) =>
+                          _validateForm(FormFields.Price, value),
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      initialValue: _editedProduct.description,
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                        focusedBorder: outlineInputBorder,
+                        labelStyle: TextStyle(
+                          color: _descriptionFocusNode.hasFocus
+                              ? Theme.of(context).accentColor
+                              : Constants.darkBG,
+                        ),
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 3,
+                      focusNode: _descriptionFocusNode,
+                      onTap: () {
+                        setState(() {
+                          FocusScope.of(context)
+                              .requestFocus(_descriptionFocusNode);
+                        });
+                      },
+                      onSaved: (value) {
+                        _editedProduct.description = value;
+                      },
+                      validator: (value) =>
+                          _validateForm(FormFields.Description, value),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          width: 100,
+                          height: 100,
+                          margin: const EdgeInsets.only(top: 8, right: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: _imageUrlFocusNode.hasFocus
+                                  ? Theme.of(context).accentColor
+                                  : Constants.darkBG,
+                              width: 1,
+                            ),
+                          ),
+                          child: _imageUrlController.text.isEmpty
+                              ? Text(
+                                  "Enter a URL",
+                                  style: TextStyle(
+                                    color: _imageUrlFocusNode.hasFocus
+                                        ? Theme.of(context).accentColor
+                                        : Constants.darkBG,
+                                  ),
+                                )
+                              : FittedBox(
+                                  child:
+                                      Image.network(_imageUrlController.text),
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            // initialValue: _editedProduct.imageUrl,
+                            decoration: InputDecoration(
+                              labelText: 'Image URL',
+                              focusedBorder: outlineInputBorder,
+                              labelStyle: TextStyle(
+                                color: _imageUrlFocusNode.hasFocus
+                                    ? Theme.of(context).accentColor
+                                    : Constants.darkBG,
+                              ),
+                            ),
+                            keyboardType: TextInputType.url,
+                            textInputAction: TextInputAction.done,
+                            controller: _imageUrlController,
+                            focusNode: _imageUrlFocusNode,
+                            onTap: () {
+                              setState(() {
+                                FocusScope.of(context)
+                                    .requestFocus(_imageUrlFocusNode);
+                              });
+                            },
+                            onSaved: (value) {
+                              _editedProduct.imageUrl = value;
+                            },
+                            onFieldSubmitted: (_) {
+                              _saveForm();
+                            },
+                            validator: (value) =>
+                                _validateForm(FormFields.ImageUrl, value),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -263,13 +272,20 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
     }
 
     _productForm.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
     ProductsProvider productsProvider = Provider.of(context);
     if (_editedProduct.id != null) {
       productsProvider.updateProduct(_editedProduct);
     } else {
-      productsProvider.addProduct(_editedProduct);
+      productsProvider.addProduct(_editedProduct).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
+      });
     }
-    Navigator.of(context).pop();
   }
 
   String _validateForm(FormFields field, String value) {
