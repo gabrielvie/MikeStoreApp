@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:mikestore/utils/constants.dart';
 import 'package:mikestore/providers/cart.dart';
+import 'package:mikestore/providers/products.dart';
 import 'package:mikestore/screens/cart.dart';
 import 'package:mikestore/widgets/app_drawer.dart';
 import 'package:mikestore/widgets/badge.dart';
@@ -22,6 +23,27 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showOnlyDesired = false;
+  bool _isInit = true;
+  bool _isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      Provider.of<ProductsProvider>(context).fetchAndSetProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+
+    _isInit = false;
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +89,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(
-        showOnlyDesired: _showOnlyDesired,
-      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ProductsGrid(),
     );
     return scaffold;
   }

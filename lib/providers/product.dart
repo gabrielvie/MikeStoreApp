@@ -68,9 +68,6 @@ class Product with ChangeNotifier {
 
   String toJson() => json.encode(toMap());
 
-  factory Product.fromJson(String source) =>
-      Product.fromMap(json.decode(source));
-
   @override
   String toString() {
     return 'Product(id: $id, title: $title, imageUrl: $imageUrl, description: $description, price: $price, isDesired: $isDesired)';

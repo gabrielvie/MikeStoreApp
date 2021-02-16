@@ -23,7 +23,6 @@ class _OrderItemState extends State<OrderItem> {
 
   @override
   Widget build(BuildContext context) {
-    print(_expanded);
     return Card(
       margin: const EdgeInsets.all(10),
       child: Column(

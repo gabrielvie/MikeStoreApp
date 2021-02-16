@@ -6,27 +6,31 @@ import 'package:http/http.dart' as http;
 import 'package:mikestore/providers/product.dart';
 
 class ProductsProvider extends ChangeNotifier {
-  List<Product> _items = [
-    Product(
-      id: 'p1',
-      title: 'Red Shirt',
-      description: 'A red shirt - it is pretty red!',
-      price: 29.99,
-      imageUrl:
-          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    ),
-  ];
+  List<Product> _items = [];
 
   // bool _showDesiredOnly = false;
-
-  List<Product> get items {
+  Future<void> fetchAndSetProducts() async {
     const serverUrl =
         'https://shopapp-gabrielvie-default-rtdb.firebaseio.com/products.json';
 
-    http.get(serverUrl).then((response) {
-      print(response.body);
-    });
+    try {
+      final response = await http.get(serverUrl);
+      final responseData = json.decode(response.body) as Map<String, dynamic>;
+      final List<Product> products = [];
 
+      responseData.forEach((id, data) {
+        data['id'] = id;
+        products.add(Product.fromMap(data));
+      });
+
+      _items = products;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  List<Product> get items {
     return _items;
   }
 
@@ -43,9 +47,9 @@ class ProductsProvider extends ChangeNotifier {
 
     try {
       final response = await http.post(serverUrl, body: product.toJson());
-      final decodedBody = json.decode(response.body);
+      final decodedResponseBody = json.decode(response.body);
 
-      product.id = decodedBody['name'];
+      product.id = decodedResponseBody['name'];
       _items.add(product);
     } catch (error) {
       throw error;
