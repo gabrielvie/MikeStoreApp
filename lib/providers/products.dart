@@ -6,12 +6,14 @@ import 'package:http/http.dart' as http;
 import 'package:mikestore/providers/product.dart';
 
 class ProductsProvider extends ChangeNotifier {
+  static const _baseServerUrl =
+      'https://shopapp-gabrielvie-default-rtdb.firebaseio.com';
+
   List<Product> _items = [];
 
   // bool _showDesiredOnly = false;
   Future<void> fetchAndSetProducts() async {
-    const serverUrl =
-        'https://shopapp-gabrielvie-default-rtdb.firebaseio.com/products.json';
+    const serverUrl = _baseServerUrl + '/products.json';
 
     try {
       final response = await http.get(serverUrl);
@@ -42,8 +44,7 @@ class ProductsProvider extends ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const serverUrl =
-        'https://shopapp-gabrielvie-default-rtdb.firebaseio.com/products.json';
+    const serverUrl = _baseServerUrl + '/products.json';
 
     try {
       final response = await http.post(serverUrl, body: product.toJson());
@@ -57,12 +58,21 @@ class ProductsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProduct(Product productToUpdate) {
+  Future<void> updateProduct(Product productToUpdate) async {
     final index =
         _items.indexWhere((product) => productToUpdate.id == product.id);
 
     if (index >= 0) {
-      _items[index] = productToUpdate;
+      try {
+        final serverUrl =
+            _baseServerUrl + '/products/${productToUpdate.id}.json';
+
+        productToUpdate.id = null;
+        await http.patch(serverUrl, body: productToUpdate.toJson());
+        _items[index] = productToUpdate;
+      } catch (error) {
+        throw error;
+      }
     }
 
     notifyListeners();

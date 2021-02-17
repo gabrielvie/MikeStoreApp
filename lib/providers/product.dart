@@ -44,7 +44,6 @@ class Product with ChangeNotifier {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'title': title,
       'imageUrl': imageUrl,
       'description': description,
