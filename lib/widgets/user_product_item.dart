@@ -34,8 +34,9 @@ class UserProductItem extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.delete),
-              onPressed: () {
-                Provider.of<ProductsProvider>(context, listen: false)
+              onPressed: () async {
+                // TODO: Adding a SnackBar here to feedback user when delete will fail.
+                await Provider.of<ProductsProvider>(context, listen: false)
                     .deleteProduct(product.id);
               },
               color: Theme.of(context).errorColor,

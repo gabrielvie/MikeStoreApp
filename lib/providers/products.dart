@@ -78,8 +78,26 @@ class ProductsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((product) => product.id == id);
+  Future<void> deleteProduct(String id) async {
+    final productListIndex = _items.indexWhere((product) => product.id == id);
+    final product = _items[productListIndex];
+
+    // 1. Removing product from the list.
+    _items.removeAt(productListIndex);
     notifyListeners();
+
+    // 2. Send a request DELETE to server.
+    final serverUrl = _baseServerUrl + '/products/$id.json';
+    final response = await http.delete(serverUrl);
+
+    // 3. If server retrives any erro greater or equal to 400, rollback the process.
+    if (response.statusCode >= 400) {
+      _items.insert(productListIndex, product);
+      notifyListeners();
+
+      // TODO: Make an Exception class.
+      print('Could\'t delete the product $id');
+      return;
+    }
   }
 }
