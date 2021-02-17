@@ -275,9 +275,10 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
     setState(() {
       _isLoading = true;
     });
+
     ProductsProvider productsProvider = Provider.of(context);
     if (_editedProduct.id != null) {
-      productsProvider.updateProduct(_editedProduct);
+      await productsProvider.updateProduct(_editedProduct);
     } else {
       try {
         await productsProvider.addProduct(_editedProduct);
@@ -297,13 +298,13 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
             ],
           ),
         );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
       }
     }
+
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   String _validateForm(FormFields field, String value) {
