@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:mikestore/providers/product.dart';
+import 'package:mikestore/models/product.dart';
 
 class ProductsProvider extends ChangeNotifier {
   static const _baseServerUrl =

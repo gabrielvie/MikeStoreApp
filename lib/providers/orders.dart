@@ -5,7 +5,7 @@ import 'package:mikestore/providers/cart.dart';
 class OrderItem {
   final String uuid;
   final double amount;
-  final List<CartItem> products;
+  final List<Cart> products;
   final DateTime dateTime;
 
   OrderItem({
@@ -21,7 +21,7 @@ class OrdersProvider extends ChangeNotifier {
 
   List<OrderItem> get items => _items;
 
-  void addOrder(List<CartItem> cartItems, double total) {
+  void addOrder(List<Cart> cartItems, double total) {
     _items.insert(
         0,
         OrderItem(

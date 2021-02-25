@@ -1,32 +1,19 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:mikestore/providers/product.dart';
-
-class CartItem {
-  final String uuid;
-  final String title;
-  final int quantity;
-  final double price;
-
-  CartItem(
-    this.uuid, {
-    @required this.title,
-    @required this.quantity,
-    @required this.price,
-  });
-}
+import 'package:mikestore/models/cart.dart';
+import 'package:mikestore/models/product.dart';
 
 class CartProvider with ChangeNotifier {
-  Map<String, CartItem> _items = {};
+  Map<String, Cart> _items = {};
 
-  Map<String, CartItem> get items => _items;
+  Map<String, Cart> get items => _items;
 
   int get itemCount => _items.length;
 
   double get totalAmount {
     double total = 0;
-    _items.forEach((key, cartItem) {
-      total += cartItem.price * cartItem.quantity;
+    _items.forEach((key, cart) {
+      total += cart.price * cart.quantity;
     });
 
     return total;
@@ -36,18 +23,18 @@ class CartProvider with ChangeNotifier {
     if (_items.containsKey(product.id)) {
       _items.update(
         product.id,
-        (cartItem) => CartItem(
-          cartItem.uuid,
-          title: cartItem.title,
-          quantity: cartItem.quantity + 1,
-          price: cartItem.price,
+        (cart) => Cart(
+          id: cart.id,
+          title: cart.title,
+          quantity: cart.quantity + 1,
+          price: cart.price,
         ),
       );
     } else {
       _items.putIfAbsent(
         product.id,
-        () => CartItem(
-          DateTime.now().toString(),
+        () => Cart(
+          id: DateTime.now().toString(),
           title: product.title,
           quantity: 1,
           price: product.price,
@@ -71,11 +58,11 @@ class CartProvider with ChangeNotifier {
     if (_items[productUuid].quantity > 1) {
       _items.update(
         productUuid,
-        (cartItem) => CartItem(
-          cartItem.uuid,
-          title: cartItem.title,
-          quantity: cartItem.quantity - 1,
-          price: cartItem.price,
+        (cart) => Cart(
+          id: cart.id,
+          title: cart.title,
+          quantity: cart.quantity - 1,
+          price: cart.price,
         ),
       );
       notifyListeners();

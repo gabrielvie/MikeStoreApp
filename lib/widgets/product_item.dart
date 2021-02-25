@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:mikestore/providers/cart.dart';
 
-import 'package:mikestore/providers/product.dart';
+import 'package:mikestore/models/product.dart';
 import 'package:mikestore/screens/products_details.dart';
+import 'package:mikestore/providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
   @override

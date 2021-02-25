@@ -47,7 +47,7 @@ class _OrderItemState extends State<OrderItem> {
               height: min(widget.order.products.length * 20 + 30.0, 100),
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  CartItem order = widget.order.products[index];
+                  Cart order = widget.order.products[index];
                   return Column(
                     children: <Widget>[
                       Row(
