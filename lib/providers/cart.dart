@@ -106,6 +106,10 @@ class CartProvider extends Provider {
 
   Future<void> clear() async {
     await delete();
+
+    // Cleanup state _cart.
+    _cart = null;
+
     notifyListeners();
   }
 

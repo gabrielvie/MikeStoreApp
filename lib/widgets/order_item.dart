@@ -7,10 +7,10 @@ import 'package:intl/intl.dart';
 
 // App imports.
 import 'package:mikestore/models/cart_item.dart';
-import 'package:mikestore/providers/orders.dart' as ord;
+import 'package:mikestore/models/order.dart';
 
 class OrderItem extends StatefulWidget {
-  final ord.OrderItem order;
+  final Order order;
 
   const OrderItem({
     Key key,
@@ -47,10 +47,10 @@ class _OrderItemState extends State<OrderItem> {
           if (_expanded)
             Container(
               padding: const EdgeInsets.only(right: 30, left: 20),
-              height: min(widget.order.products.length * 20 + 30.0, 100),
+              height: min(widget.order.items.length * 20 + 30.0, 100),
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  CartItem order = widget.order.products[index];
+                  CartItem order = widget.order.items[index];
                   return Column(
                     children: <Widget>[
                       Row(
@@ -76,7 +76,7 @@ class _OrderItemState extends State<OrderItem> {
                     ],
                   );
                 },
-                itemCount: widget.order.products.length,
+                itemCount: widget.order.items.length,
               ),
             )
         ],

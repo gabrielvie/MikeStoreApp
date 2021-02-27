@@ -1,5 +1,6 @@
 // Flutter imports.
 import 'package:flutter/material.dart';
+import 'package:mikestore/providers/orders.dart';
 import 'package:provider/provider.dart';
 
 // App imports.
@@ -43,13 +44,13 @@ class CartScreen extends StatelessWidget {
                   ),
                   FlatButton(
                     onPressed: () async {
-                      // TODO: Fix this call.
-                      // Provider.of<OrdersProvider>(context, listen: false)
-                      //     .addOrder(
-                      //   cartProvider.items.values.toList(),
-                      //   cartProvider.totalAmount,
-                      // );
-                      cartProvider.clear();
+                      final ordersProvider =
+                          Provider.of<OrdersProvider>(context);
+
+                      await ordersProvider.addOrder(cartProvider.cart);
+                      await cartProvider.clear();
+
+                      Navigator.of(context).pop();
                     },
                     child: const Text("Order Now"),
                     textColor: Theme.of(context).primaryColorDark,
