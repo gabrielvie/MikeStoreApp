@@ -15,25 +15,21 @@ class CartProvider extends Provider {
   Cart _cart;
 
   @override
-  Future<void> fetchData() async {
+  Future<void> fetch() async {
     String apiUrl = getApiUrl();
 
     try {
       final response = await http.get(apiUrl);
-      final responseData = json.decode(response.body);
-      final cartData = responseData.entries.last;
+      final responseData = json.decode(response.body) as Map<String, dynamic>;
 
-      _cart = new Cart(
-        id: cartData.key,
-        items: [],
-      );
-
-      final cartItemsData = cartData.value;
-      cartItemsData['cartItems'].forEach((cartItemData) {
-        _cart.items.add(CartItem.fromMap(cartItemData));
-      });
+      if (responseData != null) {
+        responseData.forEach((key, data) {
+          data['id'] = key;
+          _cart = new Cart.fromMap(data);
+        });
+      }
     } catch (error) {
-      print(error.toString());
+      throw error;
     }
 
     notifyListeners();
@@ -66,7 +62,7 @@ class CartProvider extends Provider {
 
   List<CartItem> get items => _cart.items;
 
-  int get itemCount => _cart != null ? _cart.items.length : 0;
+  int get itemCount => _cart == null ? 0 : _cart.items.length;
 
   Future<void> addItem(Product product) async {
     if (_cart == null) {
