@@ -41,7 +41,8 @@ class CartProvider extends Provider {
 
   @override
   Future<void> update() async {
-    String apiUrl = getApiUrl('/${_cart.id}');
+    String apiUrl = getApiUrl('/${_cart.id}.json');
+    // TODO: Add an custom exception trait.
     await http.patch(apiUrl, body: _cart.toJson());
   }
 
@@ -90,51 +91,15 @@ class CartProvider extends Provider {
     }
 
     try {
-      if (_cart.id != null) {
-        update();
+      // If cart doens't exists yet, create it.
+      if (_cart.id == null) {
+        await create();
       } else {
-        create();
+        await update();
       }
     } catch (error) {
       throw error;
     }
-    // CartItem cart = CartItem(
-    //   productId: product.id,
-    //   quantity: 1,
-    //   price: product.price,
-    // );
-
-    // try {
-    //   final apiServerUrl = this.getApiUrl('.json');
-    //   final response = await http.post(apiServerUrl, body: cart.toJson());
-    //   final decodedResponseBody = json.decode(response.body);
-
-    //   cart.id = decodedResponseBody['name'];
-    // } catch (error) {
-    //   throw error;
-    // }
-
-    // if (_items.containsKey(product.id)) {
-    //   _items.update(
-    //     product.id,
-    //     (cart) => Cart(
-    //       id: cart.id,
-    //       title: cart.title,
-    //       quantity: cart.quantity + 1,
-    //       price: cart.price,
-    //     ),
-    //   );
-    // } else {
-    //   _items.putIfAbsent(
-    //     product.id,
-    //     () => Cart(
-    //       id: DateTime.now().toString(),
-    //       title: product.title,
-    //       quantity: 1,
-    //       price: product.price,
-    //     ),
-    //   );
-    // }
 
     notifyListeners();
   }
