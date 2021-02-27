@@ -28,7 +28,7 @@ class CartProvider extends Provider {
           _cart = new Cart.fromMap(data);
         });
       } else {
-        _cart = new Cart(items: []);
+        generateEmptyCart();
       }
     } catch (error) {
       throw error;
@@ -58,6 +58,10 @@ class CartProvider extends Provider {
     String apiUrl = getApiUrl('/${_cart.id}');
     // TODO: Add an custom exception trait.
     await http.delete(apiUrl);
+  }
+
+  void generateEmptyCart() {
+    _cart = new Cart(items: []);
   }
 
   Cart get cart => _cart;
@@ -104,10 +108,7 @@ class CartProvider extends Provider {
 
   Future<void> clear() async {
     await delete();
-
-    // Cleanup state _cart.
-    _cart = null;
-
+    generateEmptyCart();
     notifyListeners();
   }
 

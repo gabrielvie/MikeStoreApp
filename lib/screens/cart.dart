@@ -41,19 +41,20 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).accentColor,
                   ),
-                  FlatButton(
-                    onPressed: () async {
-                      final ordersProvider =
-                          Provider.of<OrdersProvider>(context);
+                  if (cartProvider.itemCount > 0)
+                    FlatButton(
+                      onPressed: () async {
+                        final ordersProvider =
+                            Provider.of<OrdersProvider>(context);
 
-                      await ordersProvider.addOrder(cartProvider.cart);
-                      await cartProvider.clear();
+                        await ordersProvider.addOrder(cartProvider.cart);
+                        await cartProvider.clear();
 
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Order Now"),
-                    textColor: Theme.of(context).primaryColorDark,
-                  ),
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Order Now"),
+                      textColor: Theme.of(context).primaryColorDark,
+                    ),
                 ],
               ),
             ),
