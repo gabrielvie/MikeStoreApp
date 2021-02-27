@@ -27,6 +27,8 @@ class CartProvider extends Provider {
           data['id'] = key;
           _cart = new Cart.fromMap(data);
         });
+      } else {
+        _cart = new Cart(items: []);
       }
     } catch (error) {
       throw error;
