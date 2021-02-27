@@ -15,18 +15,18 @@ class Cart {
 
   Cart copyWith({
     String id,
-    List<CartItem> cartItems,
+    List<CartItem> items,
   }) {
     return Cart(
       id: id ?? this.id,
-      items: cartItems ?? this.items,
+      items: items ?? this.items,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'cartItems': items?.map((x) => x?.toMap())?.toList(),
+      'items': items?.map((x) => x?.toMap())?.toList(),
     };
   }
 
@@ -35,8 +35,7 @@ class Cart {
 
     return Cart(
       id: map['id'],
-      items: List<CartItem>.from(
-          map['cartItems']?.map((x) => CartItem.fromMap(x))),
+      items: List<CartItem>.from(map['items']?.map((x) => CartItem.fromMap(x))),
     );
   }
 
@@ -45,7 +44,7 @@ class Cart {
   factory Cart.fromJson(String source) => Cart.fromMap(json.decode(source));
 
   @override
-  String toString() => 'Cart(id: $id, cartItems: $items)';
+  String toString() => 'Cart(id: $id, items: $items)';
 
   double get amount => items.fold(0,
       (previousAmount, item) => previousAmount + (item.price * item.quantity));
