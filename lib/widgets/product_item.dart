@@ -59,7 +59,7 @@ class ProductItem extends StatelessWidget {
 
   Future<void> _addProductToCart(BuildContext context, Product product) async {
     CartProvider cartProvider = Provider.of(context, listen: false);
-    print("ProductItem::_addProductToCart");
+
     await cartProvider.addItem(product);
 
     Scaffold.of(context).hideCurrentSnackBar();
