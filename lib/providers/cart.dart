@@ -16,7 +16,7 @@ class CartProvider extends Provider {
 
   @override
   Future<void> fetchData() async {
-    String apiUrl = getApiUrl('.json');
+    String apiUrl = getApiUrl();
 
     try {
       final response = await http.get(apiUrl);
@@ -41,14 +41,14 @@ class CartProvider extends Provider {
 
   @override
   Future<void> update() async {
-    String apiUrl = getApiUrl('/${_cart.id}.json');
+    String apiUrl = getApiUrl('/${_cart.id}');
     // TODO: Add an custom exception trait.
     await http.patch(apiUrl, body: _cart.toJson());
   }
 
   @override
   Future<void> create() async {
-    String apiUrl = getApiUrl('.json');
+    String apiUrl = getApiUrl();
     final response = await http.post(apiUrl, body: _cart.toJson());
     final decodedResponse = json.decode(response.body);
 
@@ -57,23 +57,16 @@ class CartProvider extends Provider {
 
   @override
   Future<void> delete() async {
-    String apiUrl = getApiUrl('/${_cart.id}.json');
+    String apiUrl = getApiUrl('/${_cart.id}');
     // TODO: Add an custom exception trait.
     await http.delete(apiUrl);
   }
 
+  Cart get cart => _cart;
+
   List<CartItem> get items => _cart.items;
 
   int get itemCount => _cart != null ? _cart.items.length : 0;
-
-  double get totalAmount {
-    double total = 0;
-    _cart.items.forEach((cartItem) {
-      total += cartItem.price * cartItem.quantity;
-    });
-
-    return total;
-  }
 
   Future<void> addItem(Product product) async {
     if (_cart == null) {
