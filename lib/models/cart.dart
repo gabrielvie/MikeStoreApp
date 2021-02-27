@@ -46,4 +46,7 @@ class Cart {
 
   @override
   String toString() => 'Cart(id: $id, cartItems: $items)';
+
+  double get amount => items.fold(0,
+      (previousAmount, item) => previousAmount + (item.price * item.quantity));
 }
