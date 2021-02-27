@@ -54,15 +54,15 @@ class CartProvider extends Provider {
     _cart.id = decodedResponse['name'];
   }
 
-  // Map<String, List<CartItem>> get items => _item.cartItems;
+  List<CartItem> get items => _cart.cartItems;
 
   int get itemCount => _cart != null ? _cart.cartItems.length : 0;
 
   double get totalAmount {
     double total = 0;
-    // _item.cartItems.forEach((key, cart) {
-    //   // total += cart.price * cart.quantity;
-    // });
+    _cart.cartItems.forEach((cartItem) {
+      total += cartItem.price * cartItem.quantity;
+    });
 
     return total;
   }

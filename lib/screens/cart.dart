@@ -13,6 +13,8 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
+    final cartItems = cartProvider.items;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Cart'),
@@ -40,7 +42,7 @@ class CartScreen extends StatelessWidget {
                     backgroundColor: Theme.of(context).accentColor,
                   ),
                   FlatButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // TODO: Fix this call.
                       // Provider.of<OrdersProvider>(context, listen: false)
                       //     .addOrder(
@@ -57,16 +59,16 @@ class CartScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          // Expanded(
-          //     child: ListView.builder(
-          //   itemBuilder: (_, index) => CartItem(
-          //     uuid: cartProvider.items.values.toList()[index].id,
-          //     productId: cartProvider.items.values.toList()[index].productId,
-          //     price: cartProvider.items.values.toList()[index].price,
-          //     quantity: cartProvider.items.values.toList()[index].quantity,
-          //   ),
-          //   itemCount: cartProvider.itemCount,
-          // ))
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (_, index) => CartItem(
+                productId: cartItems[index].productId,
+                price: cartItems[index].price,
+                quantity: cartItems[index].quantity,
+              ),
+              itemCount: cartProvider.itemCount,
+            ),
+          )
         ],
       ),
     );

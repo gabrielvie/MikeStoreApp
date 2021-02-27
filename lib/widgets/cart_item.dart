@@ -3,28 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // App imports.
+import 'package:mikestore/models/product.dart';
 import 'package:mikestore/providers/cart.dart';
+import 'package:mikestore/providers/products.dart';
 
 class CartItem extends StatelessWidget {
-  final String uuid;
-  final String producId;
+  final String productId;
   final double price;
   final int quantity;
-  final String title;
 
   const CartItem({
     Key key,
-    this.uuid,
-    this.producId,
+    this.productId,
     this.price,
     this.quantity,
-    this.title,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    ProductsProvider productsProvider = Provider.of(context, listen: false);
+    Product product = productsProvider.findById(productId);
+
     return Dismissible(
-      key: ValueKey(uuid),
+      key: ValueKey(productId),
       direction: DismissDirection.endToStart,
       background: Container(
         margin: const EdgeInsets.only(right: 15, top: 5, bottom: 5),
@@ -40,7 +41,7 @@ class CartItem extends StatelessWidget {
         ),
       ),
       onDismissed: (_) {
-        Provider.of<CartProvider>(context).removeItem(producId);
+        Provider.of<CartProvider>(context).removeItem(productId);
       },
       confirmDismiss: (_) => showDialog(
         context: context,
@@ -80,7 +81,7 @@ class CartItem extends StatelessWidget {
                 ),
               ),
             ),
-            title: Text(title),
+            title: Text("${product.title}"),
             subtitle: Text('Total: \$${(price * quantity)}'),
             trailing: Text('$quantity x'),
           ),
