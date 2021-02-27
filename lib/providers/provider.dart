@@ -15,7 +15,7 @@ abstract class Provider with ChangeNotifier {
     return apiUrl + '.json';
   }
 
-  Future<void> fetchData();
+  Future<void> fetch();
 
   Future<void> create();
 
