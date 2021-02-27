@@ -4,10 +4,13 @@ import 'dart:math';
 // Flutter imports.
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 // App imports.
 import 'package:mikestore/models/cart_item.dart';
 import 'package:mikestore/models/order.dart';
+import 'package:mikestore/models/product.dart';
+import 'package:mikestore/providers/products.dart';
 
 class OrderItem extends StatefulWidget {
   final Order order;
@@ -26,6 +29,8 @@ class _OrderItemState extends State<OrderItem> {
 
   @override
   Widget build(BuildContext context) {
+    final productProvider = Provider.of<ProductsProvider>(context);
+
     return Card(
       margin: const EdgeInsets.all(10),
       child: Column(
@@ -51,13 +56,15 @@ class _OrderItemState extends State<OrderItem> {
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   CartItem order = widget.order.items[index];
+                  Product product = productProvider
+                      .findById(widget.order.items[index].productId);
                   return Column(
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            order.productId,
+                            '${product.title}',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
