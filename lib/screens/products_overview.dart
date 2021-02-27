@@ -43,7 +43,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         });
       });
 
-      Provider.of<CartProvider>(context).fetchData().then((_) {
+      Provider.of<CartProvider>(context).fetch().then((_) {
         setState(() {
           _isLoadingCart = false;
         });
