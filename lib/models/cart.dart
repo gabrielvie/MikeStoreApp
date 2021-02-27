@@ -6,11 +6,11 @@ import 'package:mikestore/models/cart_item.dart';
 
 class Cart {
   String id;
-  List<CartItem> cartItems;
+  List<CartItem> items;
 
   Cart({
     this.id,
-    this.cartItems,
+    this.items,
   });
 
   Cart copyWith({
@@ -19,14 +19,14 @@ class Cart {
   }) {
     return Cart(
       id: id ?? this.id,
-      cartItems: cartItems ?? this.cartItems,
+      items: cartItems ?? this.items,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'cartItems': cartItems?.map((x) => x?.toMap())?.toList(),
+      'cartItems': items?.map((x) => x?.toMap())?.toList(),
     };
   }
 
@@ -35,7 +35,7 @@ class Cart {
 
     return Cart(
       id: map['id'],
-      cartItems: List<CartItem>.from(
+      items: List<CartItem>.from(
           map['cartItems']?.map((x) => CartItem.fromMap(x))),
     );
   }
@@ -45,5 +45,5 @@ class Cart {
   factory Cart.fromJson(String source) => Cart.fromMap(json.decode(source));
 
   @override
-  String toString() => 'Cart(id: $id, cartItems: $cartItems)';
+  String toString() => 'Cart(id: $id, cartItems: $items)';
 }

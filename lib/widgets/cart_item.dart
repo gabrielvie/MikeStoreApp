@@ -40,14 +40,15 @@ class CartItem extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      onDismissed: (_) {
+      onDismissed: (_) async {
         Provider.of<CartProvider>(context).removeItem(productId);
       },
       confirmDismiss: (_) => showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Are you sure?'),
-          content: const Text('Do you want to remove the item from the cart?'),
+          content:
+              Text('Do you want to remove ${product.title} from the cart?'),
           actions: <Widget>[
             FlatButton(
               onPressed: () {

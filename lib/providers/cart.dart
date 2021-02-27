@@ -25,12 +25,12 @@ class CartProvider extends Provider {
 
       _cart = new Cart(
         id: cartData.key,
-        cartItems: [],
+        items: [],
       );
 
       final cartItemsData = cartData.value;
       cartItemsData['cartItems'].forEach((cartItemData) {
-        _cart.cartItems.add(CartItem.fromMap(cartItemData));
+        _cart.items.add(CartItem.fromMap(cartItemData));
       });
     } catch (error) {
       print(error.toString());
@@ -55,13 +55,20 @@ class CartProvider extends Provider {
     _cart.id = decodedResponse['name'];
   }
 
-  List<CartItem> get items => _cart.cartItems;
+  @override
+  Future<void> delete() async {
+    String apiUrl = getApiUrl('/${_cart.id}.json');
+    // TODO: Add an custom exception trait.
+    await http.delete(apiUrl);
+  }
 
-  int get itemCount => _cart != null ? _cart.cartItems.length : 0;
+  List<CartItem> get items => _cart.items;
+
+  int get itemCount => _cart != null ? _cart.items.length : 0;
 
   double get totalAmount {
     double total = 0;
-    _cart.cartItems.forEach((cartItem) {
+    _cart.items.forEach((cartItem) {
       total += cartItem.price * cartItem.quantity;
     });
 
@@ -70,10 +77,10 @@ class CartProvider extends Provider {
 
   Future<void> addItem(Product product) async {
     if (_cart == null) {
-      _cart = Cart(cartItems: []);
+      _cart = Cart(items: []);
     }
 
-    CartItem cartItem = _cart.cartItems.firstWhere(
+    CartItem cartItem = _cart.items.firstWhere(
       (cartItem) => cartItem.productId == product.id,
       orElse: () => new CartItem(
         productId: product.id,
@@ -84,10 +91,10 @@ class CartProvider extends Provider {
 
     // This if means that the cartItem isn't new.
     // And if is a new they will added at the end of the list.
-    if (_cart.cartItems.contains(cartItem)) {
+    if (_cart.items.contains(cartItem)) {
       cartItem.quantity += 1;
     } else {
-      _cart.cartItems.add(cartItem);
+      _cart.items.add(cartItem);
     }
 
     try {
@@ -104,7 +111,19 @@ class CartProvider extends Provider {
     notifyListeners();
   }
 
-  void removeItem(String productUuid) {
+  Future<void> clear() async {
+    await delete();
+    notifyListeners();
+  }
+
+  Future<void> removeItem(String productId) async {
+    _cart.items.removeWhere((cartItem) => cartItem.productId == productId);
+
+    try {
+      await update();
+    } catch (error) {
+      throw error;
+    }
     // _item.remove(productUuid);
     notifyListeners();
   }
@@ -129,10 +148,5 @@ class CartProvider extends Provider {
     // }
 
     removeItem(productUuid);
-  }
-
-  void clear() {
-    // _item = {};
-    notifyListeners();
   }
 }

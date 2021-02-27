@@ -16,6 +16,10 @@ abstract class Provider with ChangeNotifier {
   }
 
   Future<void> fetchData();
+
   Future<void> create();
+
   Future<void> update();
+
+  Future<void> delete();
 }
