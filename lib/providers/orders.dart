@@ -1,11 +1,13 @@
+// Flutter imports.
 import 'package:flutter/foundation.dart';
 
-import 'package:mikestore/providers/cart.dart';
+// App imports.
+import 'package:mikestore/models/cart_item.dart';
 
 class OrderItem {
   final String uuid;
   final double amount;
-  final List<Cart> products;
+  final List<CartItem> products;
   final DateTime dateTime;
 
   OrderItem({
@@ -21,7 +23,7 @@ class OrdersProvider extends ChangeNotifier {
 
   List<OrderItem> get items => _items;
 
-  void addOrder(List<Cart> cartItems, double total) {
+  void addOrder(List<CartItem> cartItems, double total) {
     _items.insert(
         0,
         OrderItem(

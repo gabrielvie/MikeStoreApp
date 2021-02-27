@@ -1,8 +1,11 @@
+// Dart imports.
 import 'dart:convert';
 
+// Flutter imports.
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+// App imports.
 import 'package:mikestore/models/product.dart';
 
 class ProductsProvider extends ChangeNotifier {

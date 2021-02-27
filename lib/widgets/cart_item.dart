@@ -1,10 +1,13 @@
+// Flutter imports.
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+// App imports.
 import 'package:mikestore/providers/cart.dart';
 
 class CartItem extends StatelessWidget {
   final String uuid;
-  final String productUuid;
+  final String producId;
   final double price;
   final int quantity;
   final String title;
@@ -12,7 +15,7 @@ class CartItem extends StatelessWidget {
   const CartItem({
     Key key,
     this.uuid,
-    this.productUuid,
+    this.producId,
     this.price,
     this.quantity,
     this.title,
@@ -37,7 +40,7 @@ class CartItem extends StatelessWidget {
         ),
       ),
       onDismissed: (_) {
-        Provider.of<CartProvider>(context).removeItem(productUuid);
+        Provider.of<CartProvider>(context).removeItem(producId);
       },
       confirmDismiss: (_) => showDialog(
         context: context,

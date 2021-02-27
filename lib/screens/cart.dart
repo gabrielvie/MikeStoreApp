@@ -1,8 +1,9 @@
+// Flutter imports.
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// App imports.
 import 'package:mikestore/providers/cart.dart' show CartProvider;
-import 'package:mikestore/providers/orders.dart';
 import 'package:mikestore/widgets/app_drawer.dart';
 import 'package:mikestore/widgets/cart_item.dart';
 
@@ -40,11 +41,12 @@ class CartScreen extends StatelessWidget {
                   ),
                   FlatButton(
                     onPressed: () {
-                      Provider.of<OrdersProvider>(context, listen: false)
-                          .addOrder(
-                        cartProvider.items.values.toList(),
-                        cartProvider.totalAmount,
-                      );
+                      // TODO: Fix this call.
+                      // Provider.of<OrdersProvider>(context, listen: false)
+                      //     .addOrder(
+                      //   cartProvider.items.values.toList(),
+                      //   cartProvider.totalAmount,
+                      // );
                       cartProvider.clear();
                     },
                     child: const Text("Order Now"),
@@ -55,17 +57,16 @@ class CartScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          Expanded(
-              child: ListView.builder(
-            itemBuilder: (_, index) => CartItem(
-              uuid: cartProvider.items.values.toList()[index].id,
-              title: cartProvider.items.values.toList()[index].title,
-              price: cartProvider.items.values.toList()[index].price,
-              quantity: cartProvider.items.values.toList()[index].quantity,
-              productUuid: cartProvider.items.keys.toList()[index],
-            ),
-            itemCount: cartProvider.itemCount,
-          ))
+          // Expanded(
+          //     child: ListView.builder(
+          //   itemBuilder: (_, index) => CartItem(
+          //     uuid: cartProvider.items.values.toList()[index].id,
+          //     productId: cartProvider.items.values.toList()[index].productId,
+          //     price: cartProvider.items.values.toList()[index].price,
+          //     quantity: cartProvider.items.values.toList()[index].quantity,
+          //   ),
+          //   itemCount: cartProvider.itemCount,
+          // ))
         ],
       ),
     );

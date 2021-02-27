@@ -1,13 +1,15 @@
+// App imports.
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:mikestore/utils/constants.dart';
+// Flutter imports.
+import 'package:mikestore/screens/cart.dart';
 import 'package:mikestore/providers/cart.dart';
 import 'package:mikestore/providers/products.dart';
-import 'package:mikestore/screens/cart.dart';
 import 'package:mikestore/widgets/app_drawer.dart';
 import 'package:mikestore/widgets/badge.dart';
 import 'package:mikestore/widgets/product_grid.dart';
+import 'package:mikestore/utils/constants.dart';
 
 enum FilterOptions {
   Desired,
@@ -25,17 +27,25 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showOnlyDesired = false;
   bool _isInit = true;
   bool _isLoading = false;
+  bool _isLoadingCart = false;
 
   @override
   void didChangeDependencies() {
     if (_isInit) {
       setState(() {
         _isLoading = true;
+        _isLoadingCart = true;
       });
 
       Provider.of<ProductsProvider>(context).fetchAndSetProducts().then((_) {
         setState(() {
           _isLoading = false;
+        });
+      });
+
+      Provider.of<CartProvider>(context).fetchData().then((_) {
+        setState(() {
+          _isLoadingCart = false;
         });
       });
     }
@@ -47,7 +57,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var scaffold = Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: _showOnlyDesired
             ? Text(Constants.appName + ' - Favorites')
@@ -75,17 +85,23 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               ),
             ],
           ),
-          Consumer<CartProvider>(
-            builder: (_, cartProvider, child) => Badge(
-              child: child,
-              value: cartProvider.itemCount.toString(),
-            ),
-            child: IconButton(
-              icon: Icon(Icons.shopping_cart),
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(CartScreen.routeName),
-            ),
-          ),
+          _isLoadingCart
+              // Cart icon will stay disable waiting to fetch data.
+              ? IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: null,
+                )
+              : Consumer<CartProvider>(
+                  builder: (_, cartProvider, child) => Badge(
+                    child: child,
+                    value: cartProvider.itemCount.toString(),
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.shopping_cart),
+                    onPressed: () =>
+                        Navigator.of(context).pushNamed(CartScreen.routeName),
+                  ),
+                ),
         ],
       ),
       drawer: AppDrawer(),
@@ -93,6 +109,5 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ? Center(child: CircularProgressIndicator())
           : ProductsGrid(),
     );
-    return scaffold;
   }
 }

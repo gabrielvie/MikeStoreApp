@@ -1,6 +1,8 @@
+// Flutter imports.
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// App imports.
 import 'package:mikestore/providers/orders.dart' show OrdersProvider;
 import 'package:mikestore/widgets/app_drawer.dart';
 import 'package:mikestore/widgets/order_item.dart';

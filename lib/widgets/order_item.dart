@@ -1,9 +1,12 @@
+// Dart imports.
 import 'dart:math';
 
+// Flutter imports.
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mikestore/providers/cart.dart';
 
+// App imports.
+import 'package:mikestore/models/cart_item.dart';
 import 'package:mikestore/providers/orders.dart' as ord;
 
 class OrderItem extends StatefulWidget {
@@ -47,14 +50,14 @@ class _OrderItemState extends State<OrderItem> {
               height: min(widget.order.products.length * 20 + 30.0, 100),
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  Cart order = widget.order.products[index];
+                  CartItem order = widget.order.products[index];
                   return Column(
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            order.title,
+                            order.productId,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,

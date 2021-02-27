@@ -1,7 +1,9 @@
+// Flutter imports.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// App imports.
 import 'package:mikestore/models/product.dart';
 import 'package:mikestore/screens/products_details.dart';
 import 'package:mikestore/providers/cart.dart';
@@ -10,7 +12,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
-    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    // final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
@@ -48,21 +50,26 @@ class ProductItem extends StatelessWidget {
           trailing: IconButton(
             icon: Icon(Icons.add_shopping_cart),
             color: Theme.of(context).primaryColor,
-            onPressed: () {
-              cartProvider.addItem(product);
-              Scaffold.of(context).hideCurrentSnackBar();
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Added item to cart'),
-                  duration: Duration(seconds: 2),
-                  action: SnackBarAction(
-                    label: 'Undo',
-                    onPressed: () => cartProvider.removeSingleItem(product.id),
-                  ),
-                ),
-              );
-            },
+            onPressed: () => _addProductToCart(context, product),
           ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _addProductToCart(BuildContext context, Product product) async {
+    CartProvider cartProvider = Provider.of(context, listen: false);
+    print("ProductItem::_addProductToCart");
+    await cartProvider.addItem(product);
+
+    Scaffold.of(context).hideCurrentSnackBar();
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Added item to cart'),
+        duration: Duration(seconds: 2),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () => cartProvider.removeSingleItem(product.id),
         ),
       ),
     );

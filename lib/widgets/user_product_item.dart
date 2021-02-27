@@ -1,6 +1,8 @@
+// Flutter imports
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// App imports.
 import 'package:mikestore/models/product.dart';
 import 'package:mikestore/providers/products.dart';
 import 'package:mikestore/screens/products_edit.dart';

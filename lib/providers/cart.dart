@@ -1,79 +1,173 @@
-import 'package:flutter/foundation.dart';
+// Dart imports.
+import 'dart:convert';
 
+// Flutter imports.
+import 'package:http/http.dart' as http;
+
+// App imports.
 import 'package:mikestore/models/cart.dart';
+import 'package:mikestore/models/cart_item.dart';
 import 'package:mikestore/models/product.dart';
+import 'package:mikestore/providers/provider.dart';
 
-class CartProvider with ChangeNotifier {
-  Map<String, Cart> _items = {};
+class CartProvider extends Provider {
+  String resourceName = '/carts';
+  Cart _cart;
 
-  Map<String, Cart> get items => _items;
+  @override
+  Future<void> fetchData() async {
+    String apiUrl = getApiUrl('.json');
 
-  int get itemCount => _items.length;
+    try {
+      final response = await http.get(apiUrl);
+      final responseData = json.decode(response.body);
+      final cartData = responseData.entries.last;
+
+      _cart = new Cart(
+        id: cartData.key,
+        cartItems: [],
+      );
+
+      final cartItemsData = cartData.value;
+      cartItemsData['cartItems'].forEach((cartItemData) {
+        _cart.cartItems.add(CartItem.fromMap(cartItemData));
+      });
+    } catch (error) {
+      print(error.toString());
+    }
+
+    notifyListeners();
+  }
+
+  @override
+  Future<void> update() async {
+    String apiUrl = getApiUrl('/${_cart.id}');
+    await http.patch(apiUrl, body: _cart.toJson());
+  }
+
+  @override
+  Future<void> create() async {
+    String apiUrl = getApiUrl('.json');
+    final response = await http.post(apiUrl, body: _cart.toJson());
+    final decodedResponse = json.decode(response.body);
+
+    _cart.id = decodedResponse['name'];
+  }
+
+  // Map<String, List<CartItem>> get items => _item.cartItems;
+
+  int get itemCount => _cart != null ? _cart.cartItems.length : 0;
 
   double get totalAmount {
     double total = 0;
-    _items.forEach((key, cart) {
-      total += cart.price * cart.quantity;
-    });
+    // _item.cartItems.forEach((key, cart) {
+    //   // total += cart.price * cart.quantity;
+    // });
 
     return total;
   }
 
-  void addItem(Product product) {
-    if (_items.containsKey(product.id)) {
-      _items.update(
-        product.id,
-        (cart) => Cart(
-          id: cart.id,
-          title: cart.title,
-          quantity: cart.quantity + 1,
-          price: cart.price,
-        ),
-      );
-    } else {
-      _items.putIfAbsent(
-        product.id,
-        () => Cart(
-          id: DateTime.now().toString(),
-          title: product.title,
-          quantity: 1,
-          price: product.price,
-        ),
-      );
+  Future<void> addItem(Product product) async {
+    if (_cart == null) {
+      _cart = Cart(cartItems: []);
     }
+
+    CartItem cartItem = _cart.cartItems.firstWhere(
+      (cartItem) => cartItem.productId == product.id,
+      orElse: () => new CartItem(
+        productId: product.id,
+        quantity: 1,
+        price: product.price,
+      ),
+    );
+
+    // This if means that the cartItem isn't new.
+    // And if is a new they will added at the end of the list.
+    if (_cart.cartItems.contains(cartItem)) {
+      cartItem.quantity += 1;
+    } else {
+      _cart.cartItems.add(cartItem);
+    }
+
+    try {
+      if (_cart.id != null) {
+        update();
+      } else {
+        create();
+      }
+    } catch (error) {
+      throw error;
+    }
+    // CartItem cart = CartItem(
+    //   productId: product.id,
+    //   quantity: 1,
+    //   price: product.price,
+    // );
+
+    // try {
+    //   final apiServerUrl = this.getApiUrl('.json');
+    //   final response = await http.post(apiServerUrl, body: cart.toJson());
+    //   final decodedResponseBody = json.decode(response.body);
+
+    //   cart.id = decodedResponseBody['name'];
+    // } catch (error) {
+    //   throw error;
+    // }
+
+    // if (_items.containsKey(product.id)) {
+    //   _items.update(
+    //     product.id,
+    //     (cart) => Cart(
+    //       id: cart.id,
+    //       title: cart.title,
+    //       quantity: cart.quantity + 1,
+    //       price: cart.price,
+    //     ),
+    //   );
+    // } else {
+    //   _items.putIfAbsent(
+    //     product.id,
+    //     () => Cart(
+    //       id: DateTime.now().toString(),
+    //       title: product.title,
+    //       quantity: 1,
+    //       price: product.price,
+    //     ),
+    //   );
+    // }
 
     notifyListeners();
   }
 
   void removeItem(String productUuid) {
-    _items.remove(productUuid);
+    // _item.remove(productUuid);
     notifyListeners();
   }
 
   void removeSingleItem(String productUuid) {
-    if (!_items.containsKey(productUuid)) {
-      return;
-    }
+    // if (!_item.containsKey(productUuid)) {
+    //   return;
+    // }
 
-    if (_items[productUuid].quantity > 1) {
-      _items.update(
-        productUuid,
-        (cart) => Cart(
-          id: cart.id,
-          title: cart.title,
-          quantity: cart.quantity - 1,
-          price: cart.price,
-        ),
-      );
-      notifyListeners();
-      return;
-    }
+    // if (_itemsLegacy[productUuid].quantity > 1) {
+    //   _itemsLegacy.update(
+    //     productUuid,
+    //     (cart) => CartItem(
+    //       id: cart.id,
+    //       title: cart.title,
+    //       quantity: cart.quantity - 1,
+    //       price: cart.price,
+    //     ),
+    //   );
+    //   notifyListeners();
+    //   return;
+    // }
 
     removeItem(productUuid);
   }
 
   void clear() {
-    _items = {};
+    // _item = {};
     notifyListeners();
   }
 }
