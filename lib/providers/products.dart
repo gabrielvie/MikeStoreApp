@@ -2,24 +2,25 @@
 import 'dart:convert';
 
 // Flutter imports.
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 // App imports.
 import 'package:mikestore/models/product.dart';
+import 'package:mikestore/providers/provider.dart';
 
-class ProductsProvider extends ChangeNotifier {
-  static const _baseServerUrl =
-      'https://shopapp-gabrielvie-default-rtdb.firebaseio.com';
+class ProductsProvider extends Provider {
+  String resourceName = '/products';
 
   List<Product> _items = [];
 
-  // bool _showDesiredOnly = false;
-  Future<void> fetchAndSetProducts() async {
-    const serverUrl = _baseServerUrl + '/products.json';
+  Product _product;
+
+  @override
+  Future<void> fetch() async {
+    String url = getApiUrl();
 
     try {
-      final response = await http.get(serverUrl);
+      final response = await http.get(url);
       final responseData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> products = [];
 
@@ -35,9 +36,36 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  List<Product> get items {
-    return _items;
+  @override
+  Future<void> create() async {
+    String url = getApiUrl();
+
+    final response = await http.post(url, body: _product.toJson());
+    final decodedResponseBody = json.decode(response.body);
+
+    // Assign response id to Product object.
+    _product.id = decodedResponseBody['name'];
   }
+
+  @override
+  Future<void> update() async {
+    String url = getApiUrl('/${_product.id}');
+    // TODO: Add an custom exception trait.
+    await http.patch(url, body: _product.toJson());
+  }
+
+  @override
+  Future<void> delete() async {
+    String url = getApiUrl('/${_product.id}');
+
+    final response = await http.delete(url);
+
+    if (response.statusCode >= 400) {
+      throw new Exception(response);
+    }
+  }
+
+  List<Product> get items => _items;
 
   List<Product> get desiredItems =>
       _items.where((product) => product.isDesired).toList();
@@ -47,60 +75,56 @@ class ProductsProvider extends ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const serverUrl = _baseServerUrl + '/products.json';
+    _product = product;
 
     try {
-      final response = await http.post(serverUrl, body: product.toJson());
-      final decodedResponseBody = json.decode(response.body);
+      // Call create method to send product to API.
+      await create();
 
-      product.id = decodedResponseBody['name'];
-      _items.add(product);
+      // Add product objetc at the end of List<Product>.
+      _items.add(_product);
+
+      // Cleanup current _product.
+      _product = null;
     } catch (error) {
       throw error;
     }
+
     notifyListeners();
   }
 
-  Future<void> updateProduct(Product productToUpdate) async {
-    final index =
-        _items.indexWhere((product) => productToUpdate.id == product.id);
+  Future<void> updateProduct(Product product) async {
+    try {
+      _product = product;
 
-    if (index >= 0) {
-      try {
-        final serverUrl =
-            _baseServerUrl + '/products/${productToUpdate.id}.json';
+      // Call update method to send product to API.
+      update();
 
-        productToUpdate.id = null;
-        await http.patch(serverUrl, body: productToUpdate.toJson());
-        _items[index] = productToUpdate;
-      } catch (error) {
-        throw error;
-      }
+      // Cleanup current _product.
+      _product = null;
+    } catch (error) {
+      throw error;
     }
 
     notifyListeners();
   }
 
-  Future<void> deleteProduct(String id) async {
-    final productListIndex = _items.indexWhere((product) => product.id == id);
-    final product = _items[productListIndex];
+  Future<void> deleteProduct(Product product) async {
+    try {
+      _product = product;
 
-    // 1. Removing product from the list.
-    _items.removeAt(productListIndex);
-    notifyListeners();
+      // Call update method to send product to API.
+      delete();
 
-    // 2. Send a request DELETE to server.
-    final serverUrl = _baseServerUrl + '/products/$id.json';
-    final response = await http.delete(serverUrl);
+      // Remove product from List<Product>.
+      _items.remove(_product);
 
-    // 3. If server retrives any erro greater or equal to 400, rollback the process.
-    if (response.statusCode >= 400) {
-      _items.insert(productListIndex, product);
-      notifyListeners();
-
-      // TODO: Make an Exception class.
-      print('Could\'t delete the product $id');
-      return;
+      // Cleanup current _product.
+      _product = null;
+    } catch (error) {
+      throw error;
     }
+
+    notifyListeners();
   }
 }

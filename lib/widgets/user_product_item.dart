@@ -39,7 +39,7 @@ class UserProductItem extends StatelessWidget {
               onPressed: () async {
                 // TODO: Adding a SnackBar here to feedback user when delete will fail.
                 await Provider.of<ProductsProvider>(context, listen: false)
-                    .deleteProduct(product.id);
+                    .deleteProduct(product);
               },
               color: Theme.of(context).errorColor,
             ),

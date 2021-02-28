@@ -36,7 +36,7 @@ class OrdersProvider extends Provider {
     final response = await http.post(url, body: _order.toJson());
     final decodedResponse = json.decode(response.body);
 
-    // Assign response id to Order object;
+    // Assign response id to Order object.
     _order.id = decodedResponse['name'];
   }
 
