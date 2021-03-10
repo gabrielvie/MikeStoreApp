@@ -22,6 +22,11 @@ class OrdersProvider extends Provider {
     final response = await http.get(url);
     final responseData = json.decode(response.body) as Map<String, dynamic>;
 
+    // If response comes from API Servers, was an empty list, returns void.
+    if (responseData == null) return;
+
+    // Reset the _items list.
+    _items = [];
     responseData.forEach((key, data) {
       data['id'] = key;
       _items.insert(0, Order.fromMap(data));

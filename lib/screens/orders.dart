@@ -15,43 +15,46 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  bool _isInit = true;
-  bool _isLoading = false;
+  Future _orders;
 
   @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
+  void initState() {
+    super.initState();
+    _orders = _getOrders();
+  }
 
-      Provider.of<OrdersProvider>(context).fetch().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-
-    _isInit = false;
-
-    super.didChangeDependencies();
+  _getOrders() async {
+    OrdersProvider ordersProvider = Provider.of(context, listen: false);
+    await ordersProvider.fetch();
+    return ordersProvider.items;
   }
 
   @override
   Widget build(BuildContext context) {
-    final ordersProvider = Provider.of<OrdersProvider>(context);
-
     return Scaffold(
       appBar: AppBar(title: const Text('Your Orders!')),
       drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemBuilder: (_, index) => OrderItem(
-                order: ordersProvider.items[index],
-              ),
-              itemCount: ordersProvider.items.length,
-            ),
+      body: FutureBuilder(
+        future: _orders,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            case ConnectionState.done:
+              return Consumer<OrdersProvider>(
+                builder: (context, ordersData, child) => ListView.builder(
+                  itemBuilder: (_, i) => OrderItem(order: ordersData.items[i]),
+                  itemCount: ordersData.items.length,
+                ),
+              );
+            default:
+              return Center(
+                child: const Text('There\'s somenting wrong with this app.'),
+              );
+          }
+        },
+      ),
     );
   }
 }
