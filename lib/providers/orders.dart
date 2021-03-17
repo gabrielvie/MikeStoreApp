@@ -16,7 +16,6 @@ class OrdersProvider extends Provider {
 
   List<Order> _items = [];
 
-  @override
   Future<void> fetch() async {
     String url = getApiUrl();
     final response = await http.get(url);
@@ -35,7 +34,6 @@ class OrdersProvider extends Provider {
     notifyListeners();
   }
 
-  @override
   Future<void> create() async {
     String url = getApiUrl();
     final response = await http.post(url, body: _order.toJson());
@@ -43,16 +41,6 @@ class OrdersProvider extends Provider {
 
     // Assign response id to Order object.
     _order.id = decodedResponse['name'];
-  }
-
-  @override
-  Future<void> delete() {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> update() {
-    throw UnimplementedError();
   }
 
   List<Order> get items => _items;

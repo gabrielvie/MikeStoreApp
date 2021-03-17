@@ -14,7 +14,6 @@ class CartProvider extends Provider {
   String resourceName = '/carts';
   Cart _cart;
 
-  @override
   Future<void> fetch() async {
     String apiUrl = getApiUrl();
 
@@ -37,14 +36,12 @@ class CartProvider extends Provider {
     notifyListeners();
   }
 
-  @override
   Future<void> update() async {
     String apiUrl = getApiUrl('/${_cart.id}');
     // TODO: Add an custom exception trait.
     await http.patch(apiUrl, body: _cart.toJson());
   }
 
-  @override
   Future<void> create() async {
     String apiUrl = getApiUrl();
     final response = await http.post(apiUrl, body: _cart.toJson());
@@ -53,7 +50,6 @@ class CartProvider extends Provider {
     _cart.id = decodedResponse['name'];
   }
 
-  @override
   Future<void> delete() async {
     String apiUrl = getApiUrl('/${_cart.id}');
     // TODO: Add an custom exception trait.

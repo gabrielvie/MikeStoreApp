@@ -5,21 +5,17 @@ abstract class Provider with ChangeNotifier {
       'https://shopapp-gabrielvie-default-rtdb.firebaseio.com';
   String resourceName;
 
-  String getApiUrl([String complement = '']) {
+  String getApiUrl([String complement = '', withJson = true]) {
     String apiUrl = apiServerURL + resourceName;
 
     if (complement.isNotEmpty) {
       apiUrl += complement;
     }
 
-    return apiUrl + '.json';
+    if (withJson) {
+      return apiUrl + '.json';
+    }
+
+    return apiUrl;
   }
-
-  Future<void> fetch();
-
-  Future<void> create();
-
-  Future<void> update();
-
-  Future<void> delete();
 }

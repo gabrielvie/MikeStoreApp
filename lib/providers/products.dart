@@ -15,7 +15,6 @@ class ProductsProvider extends Provider {
 
   Product _product;
 
-  @override
   Future<void> fetch() async {
     String url = getApiUrl();
 
@@ -36,7 +35,6 @@ class ProductsProvider extends Provider {
     }
   }
 
-  @override
   Future<void> create() async {
     String url = getApiUrl();
 
@@ -47,14 +45,12 @@ class ProductsProvider extends Provider {
     _product.id = decodedResponseBody['name'];
   }
 
-  @override
   Future<void> update() async {
     String url = getApiUrl('/${_product.id}');
     // TODO: Add an custom exception trait.
     await http.patch(url, body: _product.toJson());
   }
 
-  @override
   Future<void> delete() async {
     String url = getApiUrl('/${_product.id}');
 
