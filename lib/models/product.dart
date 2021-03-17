@@ -21,11 +21,6 @@ class Product with ChangeNotifier {
     this.isDesired = false,
   });
 
-  void toogleFavoriteStatus() {
-    isDesired = !isDesired;
-    notifyListeners();
-  }
-
   Product copyWith({
     String id,
     String title,

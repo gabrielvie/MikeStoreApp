@@ -29,7 +29,8 @@ class ProductItem extends StatelessWidget {
             );
           },
         ),
-        header: Container(
+        // FIXME: Fix this to avoid error
+        /*header: Container(
           alignment: Alignment.topLeft,
           // Rebuilds only this part of code if product changes.
           child: Consumer<Product>(
@@ -40,7 +41,7 @@ class ProductItem extends StatelessWidget {
               onPressed: () => product.toogleFavoriteStatus(),
             ),
           ),
-        ),
+        ),*/
         footer: GridTileBar(
           backgroundColor: Colors.black54,
           title: Text(
