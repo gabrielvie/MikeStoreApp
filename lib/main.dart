@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // App imports.
+import 'package:mikestore/providers/auth.dart';
 import 'package:mikestore/providers/cart.dart';
 import 'package:mikestore/providers/orders.dart';
+import 'package:mikestore/screens/auth.dart';
 import 'package:mikestore/screens/cart.dart';
 import 'package:mikestore/screens/orders.dart';
 import 'package:mikestore/screens/products_details.dart';
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ProductsProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => OrdersProvider()),
@@ -31,8 +34,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: Constants.appName,
         theme: Constants.lightTheme,
-        initialRoute: ProductsOverviewScreen.routeName,
+        initialRoute: AuthScreen.routeName,
         routes: {
+          AuthScreen.routeName: (_) => AuthScreen(),
           CartScreen.routeName: (_) => CartScreen(),
           ProductsOverviewScreen.routeName: (_) => ProductsOverviewScreen(),
           ProductsDetailsScreen.routeName: (_) => ProductsDetailsScreen(),
