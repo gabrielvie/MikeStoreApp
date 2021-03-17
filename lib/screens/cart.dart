@@ -1,10 +1,10 @@
 // Flutter imports.
 import 'package:flutter/material.dart';
-import 'package:mikestore/providers/orders.dart';
 import 'package:provider/provider.dart';
 
 // App imports.
 import 'package:mikestore/providers/cart.dart' show CartProvider;
+import 'package:mikestore/providers/orders.dart';
 import 'package:mikestore/widgets/app_drawer.dart';
 import 'package:mikestore/widgets/cart_item.dart';
 
