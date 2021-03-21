@@ -96,24 +96,29 @@ class _AuthCardState extends State<AuthCard> {
                 if (_isLoading)
                   CircularProgressIndicator()
                 else
-                  RaisedButton(
+                  ElevatedButton(
                     child:
                         Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
                     onPressed: _submit,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                    style: ElevatedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                      primary: Constants.lightAccent,
+                      textStyle: TextStyle(color: Constants.darkAccent),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-                    color: Constants.lightAccent,
-                    textColor: Constants.lightPrimary,
                   ),
-                FlatButton(
+                TextButton(
                   onPressed: _switchAuthMode,
                   child: Text(
                       '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 4),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textColor: Constants.lightAccent,
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 4),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    textStyle: TextStyle(color: Constants.lightAccent),
+                  ),
                 ),
               ],
             ),

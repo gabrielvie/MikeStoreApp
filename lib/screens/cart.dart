@@ -42,7 +42,8 @@ class CartScreen extends StatelessWidget {
                     backgroundColor: Theme.of(context).accentColor,
                   ),
                   if (cartProvider.itemCount > 0)
-                    FlatButton(
+                    TextButton(
+                      child: const Text("Order Now"),
                       onPressed: () async {
                         final ordersProvider =
                             Provider.of<OrdersProvider>(context);
@@ -52,8 +53,11 @@ class CartScreen extends StatelessWidget {
 
                         Navigator.of(context).pop();
                       },
-                      child: const Text("Order Now"),
-                      textColor: Theme.of(context).primaryColorDark,
+                      style: TextButton.styleFrom(
+                        textStyle: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                      ),
                     ),
                 ],
               ),

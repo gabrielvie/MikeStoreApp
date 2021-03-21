@@ -291,7 +291,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
             title: const Text('An error occurred!'),
             content: Text('Something went wrong.'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: const Text('Ok'),
                 onPressed: () {
                   Navigator.of(context).pop();
