@@ -45,8 +45,8 @@ class CartScreen extends StatelessWidget {
                     TextButton(
                       child: const Text("Order Now"),
                       onPressed: () async {
-                        final ordersProvider =
-                            Provider.of<OrdersProvider>(context);
+                        final OrdersProvider ordersProvider =
+                            Provider.of(context, listen: false);
 
                         await ordersProvider.addOrder(cartProvider.cart);
                         await cartProvider.clear();

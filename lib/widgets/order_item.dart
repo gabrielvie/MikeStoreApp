@@ -1,6 +1,3 @@
-// Dart imports.
-import 'dart:math';
-
 // Flutter imports.
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +26,7 @@ class _OrderItemState extends State<OrderItem> {
 
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<ProductsProvider>(context);
+    ProductsProvider productProvider = Provider.of(context, listen: false);
 
     return Card(
       margin: const EdgeInsets.all(10),
@@ -52,7 +49,7 @@ class _OrderItemState extends State<OrderItem> {
           if (_expanded)
             Container(
               padding: const EdgeInsets.only(right: 30, left: 20),
-              height: min(widget.order.items.length * 20 + 30.0, 100),
+              height: widget.order.items.length * 40 + 30.0,
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   CartItem order = widget.order.items[index];
@@ -63,11 +60,15 @@ class _OrderItemState extends State<OrderItem> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            '${product.title}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          Flexible(
+                            child: Container(
+                              child: Text(
+                                '${product.title}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
                           Text(
