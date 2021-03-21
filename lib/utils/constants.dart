@@ -16,7 +16,9 @@ class Constants {
     backgroundColor: lightBG,
     primaryColor: lightPrimary,
     accentColor: lightAccent,
-    cursorColor: lightAccent,
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: lightAccent,
+    ),
     scaffoldBackgroundColor: lightBG,
     fontFamily: 'Lato',
     appBarTheme: AppBarTheme(
@@ -36,7 +38,9 @@ class Constants {
     primaryColor: darkPrimary,
     accentColor: darkAccent,
     scaffoldBackgroundColor: darkBG,
-    cursorColor: darkAccent,
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: darkAccent,
+    ),
     fontFamily: 'Lato',
     appBarTheme: AppBarTheme(
       textTheme: TextTheme(
