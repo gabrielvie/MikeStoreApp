@@ -28,13 +28,14 @@ class AuthProvider extends Provider {
   };
 
   bool get isAuthenticated {
-    return _auth['idToken'] != null;
+    return token != null;
   }
 
   String get token {
     if (_auth['expiresIn'] != null &&
-        _auth['expiresIn'].isAfter(DateTime.now())) {
-      return token;
+        _auth['expiresIn'].isAfter(DateTime.now()) &&
+        _auth['idToken'] != null) {
+      return _auth['idToken'];
     }
 
     return null;
