@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 // App imports.
 import 'package:mikestore/models/product.dart';
 import 'package:mikestore/providers/provider.dart';
+import 'package:mikestore/utils/exeptions.dart';
 
 class ProductsProvider extends Provider {
   String resourceName = '/products';
@@ -18,21 +19,24 @@ class ProductsProvider extends Provider {
   Future<void> fetch() async {
     String url = getApiUrl();
 
-    try {
-      final response = await http.get(url);
-      final responseData = json.decode(response.body) as Map<String, dynamic>;
-      final List<Product> products = [];
+    final response = await http.get(url);
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
+    final List<Product> products = [];
 
-      responseData.forEach((id, data) {
-        data['id'] = id;
-        products.add(Product.fromMap(data));
-      });
-
-      _items = products;
-      notifyListeners();
-    } catch (error) {
-      throw error;
+    if (response.statusCode >= 400) {
+      throw new HttpException(
+        code: response.statusCode,
+        error: responseData['error'],
+      );
     }
+
+    responseData.forEach((id, data) {
+      data['id'] = id;
+      products.add(Product.fromMap(data));
+    });
+
+    _items = products;
+    notifyListeners();
   }
 
   Future<void> create() async {

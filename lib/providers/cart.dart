@@ -9,6 +9,7 @@ import 'package:mikestore/models/cart.dart';
 import 'package:mikestore/models/cart_item.dart';
 import 'package:mikestore/models/product.dart';
 import 'package:mikestore/providers/provider.dart';
+import 'package:mikestore/utils/exeptions.dart';
 
 class CartProvider extends Provider {
   String resourceName = '/carts';
@@ -17,20 +18,23 @@ class CartProvider extends Provider {
   Future<void> fetch() async {
     String apiUrl = getApiUrl();
 
-    try {
-      final response = await http.get(apiUrl);
-      final responseData = json.decode(response.body) as Map<String, dynamic>;
+    final response = await http.get(apiUrl);
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
 
-      if (responseData != null) {
-        responseData.forEach((key, data) {
-          data['id'] = key;
-          _cart = new Cart.fromMap(data);
-        });
-      } else {
-        generateEmptyCart();
-      }
-    } catch (error) {
-      throw error;
+    if (response.statusCode >= 400) {
+      throw new HttpException(
+        code: response.statusCode,
+        error: responseData['error'],
+      );
+    }
+
+    if (responseData != null) {
+      responseData.forEach((key, data) {
+        data['id'] = key;
+        _cart = new Cart.fromMap(data);
+      });
+    } else {
+      generateEmptyCart();
     }
 
     notifyListeners();

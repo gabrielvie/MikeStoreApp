@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // Flutter imports.
+import 'package:mikestore/screens/auth.dart';
 import 'package:mikestore/screens/cart.dart';
 import 'package:mikestore/providers/cart.dart';
 import 'package:mikestore/providers/products.dart';
@@ -10,6 +11,7 @@ import 'package:mikestore/widgets/app_drawer.dart';
 import 'package:mikestore/widgets/badge.dart';
 import 'package:mikestore/widgets/product_grid.dart';
 import 'package:mikestore/utils/constants.dart';
+import 'package:mikestore/utils/dialogs.dart';
 
 enum FilterOptions {
   Desired,
@@ -23,7 +25,8 @@ class ProductsOverviewScreen extends StatefulWidget {
   _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
 }
 
-class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>
+    with Dialogs {
   bool _showOnlyDesired = false;
   bool _isInit = true;
   bool _isLoading = false;
@@ -37,16 +40,23 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         _isLoadingCart = true;
       });
 
-      Provider.of<ProductsProvider>(context).fetch().then((_) {
+      ProductsProvider productsProvider = Provider.of(context);
+      CartProvider cartProvider = Provider.of(context);
+
+      productsProvider.fetch().then((value) {
         setState(() {
           _isLoading = false;
         });
+      }).onError((error, stackTrace) {
+        showError(context, error.toString(), AuthScreen.routeName);
       });
 
-      Provider.of<CartProvider>(context).fetch().then((_) {
+      cartProvider.fetch().then((_) {
         setState(() {
           _isLoadingCart = false;
         });
+      }).onError((error, stackTrace) {
+        showError(context, error.toString(), AuthScreen.routeName);
       });
     }
 
