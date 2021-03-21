@@ -123,6 +123,24 @@ class _AuthCardState extends State<AuthCard> {
     );
   }
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('An error occurred!'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Ok'),
+          )
+        ],
+      ),
+    );
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       return;
@@ -144,9 +162,9 @@ class _AuthCardState extends State<AuthCard> {
         await authProvider.request(user, 'signup');
       }
     } on HttpException catch (e) {
-      print(e.toString());
+      _showErrorDialog(e.toString());
     } catch (e) {
-      print(e.toString());
+      _showErrorDialog(e.toString());
     }
 
     setState(() {

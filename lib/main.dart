@@ -31,19 +31,22 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => OrdersProvider()),
       ],
-      child: MaterialApp(
-        title: Constants.appName,
-        theme: Constants.lightTheme,
-        initialRoute: AuthScreen.routeName,
-        routes: {
-          AuthScreen.routeName: (_) => AuthScreen(),
-          CartScreen.routeName: (_) => CartScreen(),
-          ProductsOverviewScreen.routeName: (_) => ProductsOverviewScreen(),
-          ProductsDetailsScreen.routeName: (_) => ProductsDetailsScreen(),
-          ProductsEditScreen.routeName: (_) => ProductsEditScreen(),
-          OrdersScreen.routeName: (_) => OrdersScreen(),
-          UserProductsScreen.routeName: (_) => UserProductsScreen(),
-        },
+      child: Consumer<AuthProvider>(
+        builder: (context, auth, _) => MaterialApp(
+          title: Constants.appName,
+          theme: Constants.lightTheme,
+          // initialRoute: AuthScreen.routeName,
+          home: auth.isAuthenticated ? ProductsOverviewScreen() : AuthScreen(),
+          routes: {
+            AuthScreen.routeName: (_) => AuthScreen(),
+            CartScreen.routeName: (_) => CartScreen(),
+            ProductsOverviewScreen.routeName: (_) => ProductsOverviewScreen(),
+            ProductsDetailsScreen.routeName: (_) => ProductsDetailsScreen(),
+            ProductsEditScreen.routeName: (_) => ProductsEditScreen(),
+            OrdersScreen.routeName: (_) => OrdersScreen(),
+            UserProductsScreen.routeName: (_) => UserProductsScreen(),
+          },
+        ),
       ),
     );
   }

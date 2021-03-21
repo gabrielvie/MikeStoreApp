@@ -5,7 +5,6 @@ import 'package:mikestore/models/user.dart';
 
 // App imports.
 import 'package:mikestore/providers/provider.dart';
-import 'package:mikestore/utils/constants.dart';
 import 'package:mikestore/utils/exeptions.dart';
 
 class AuthProvider extends Provider {
@@ -28,7 +27,20 @@ class AuthProvider extends Provider {
     'expiresIn': null
   };
 
-  Map<String, dynamic> _formatToSend() {
+  bool get isAuthenticated {
+    return _auth['idToken'] != null;
+  }
+
+  String get token {
+    if (_auth['expiresIn'] != null &&
+        _auth['expiresIn'].isAfter(DateTime.now())) {
+      return token;
+    }
+
+    return null;
+  }
+
+  Map<String, dynamic> _encodeData() {
     // Preparing data to send to the API Server.
     var mappedUser = _user.toMap();
     mappedUser.addAll({'returnSecureToken': true});
@@ -36,14 +48,16 @@ class AuthProvider extends Provider {
     return mappedUser;
   }
 
-  void _formatToStore(Map<String, dynamic> responseData) {
+  void _storeData(Map<String, dynamic> responseData) {
     _user.id = responseData['localId'];
+
+    int expiresIn = int.parse(responseData['expiresIn']);
 
     _auth.addAll({
       'idToken': responseData['idToken'],
       'user': _user,
       'refreshToken': responseData['refreshToken'],
-      'expiresIn': null,
+      'expiresIn': DateTime.now().add(Duration(seconds: expiresIn)),
     });
   }
 
@@ -53,8 +67,7 @@ class AuthProvider extends Provider {
     final String apiAction = actions[actionKey].replaceAll('<key>', apiKey);
     final String apiUrl = getApiUrl(apiAction, false);
 
-    final response =
-        await http.post(apiUrl, body: json.encode(_formatToSend()));
+    final response = await http.post(apiUrl, body: json.encode(_encodeData()));
     final responseData = json.decode(response.body) as Map<String, dynamic>;
 
     if (responseData['error'] != null) {
@@ -64,6 +77,7 @@ class AuthProvider extends Provider {
       );
     }
 
-    _formatToStore(responseData);
+    _storeData(responseData);
+    notifyListeners();
   }
 }
