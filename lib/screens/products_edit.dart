@@ -72,8 +72,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
     if (_isInit) {
       final productId = ModalRoute.of(context).settings.arguments as String;
       if (productId != null) {
-        _editedProduct =
-            Provider.of<ProductsProvider>(context).findById(productId);
+        _editedProduct = Provider.of<ProductsProvider>(context).find(productId);
         _imageUrlController.text = _editedProduct.imageUrl;
       }
     }
@@ -280,10 +279,10 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
 
     ProductsProvider productsProvider = Provider.of(context);
     if (_editedProduct.id != null) {
-      await productsProvider.updateProduct(_editedProduct);
+      await productsProvider.update(_editedProduct);
     } else {
       try {
-        await productsProvider.addProduct(_editedProduct);
+        await productsProvider.create(_editedProduct);
       } catch (error) {
         await showDialog(
           context: context,

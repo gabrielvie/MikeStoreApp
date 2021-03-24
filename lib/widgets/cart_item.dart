@@ -22,7 +22,7 @@ class CartItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProductsProvider productsProvider = Provider.of(context, listen: false);
-    Product product = productsProvider.findById(productId);
+    Product product = productsProvider.find(productId);
 
     return Dismissible(
       key: ValueKey(productId),

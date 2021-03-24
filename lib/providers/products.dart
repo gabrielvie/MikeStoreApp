@@ -39,47 +39,17 @@ class ProductsProvider extends Provider {
     notifyListeners();
   }
 
-  Future<void> create() async {
-    String url = getApiUrl();
-
-    final response = await http.post(url, body: _product.toJson());
-    final decodedResponseBody = json.decode(response.body);
-
-    // Assign response id to Product object.
-    _product.id = decodedResponseBody['name'];
-  }
-
-  Future<void> update() async {
-    String url = getApiUrl('/${_product.id}');
-    // TODO: Add an custom exception trait.
-    await http.patch(url, body: _product.toJson());
-  }
-
-  Future<void> delete() async {
-    String url = getApiUrl('/${_product.id}');
-
-    final response = await http.delete(url);
-
-    if (response.statusCode >= 400) {
-      throw new Exception(response);
-    }
-  }
-
-  List<Product> get items => _items;
-
-  List<Product> get desiredItems =>
-      _items.where((product) => product.isDesired).toList();
-
-  Product findById(String id) {
-    return _items.firstWhere((product) => product.id == id);
-  }
-
-  Future<void> addProduct(Product product) async {
+  Future<void> create(Product product) async {
     _product = product;
 
     try {
-      // Call create method to send product to API.
-      await create();
+      String url = getApiUrl();
+
+      final response = await http.post(url, body: _product.toJson());
+      final decodedResponseBody = json.decode(response.body);
+
+      // Assign response id to Product object.
+      _product.id = decodedResponseBody['name'];
 
       // Add product objetc at the end of List<Product>.
       _items.add(_product);
@@ -93,12 +63,13 @@ class ProductsProvider extends Provider {
     notifyListeners();
   }
 
-  Future<void> updateProduct(Product product) async {
+  Future<void> update(Product product) async {
     try {
       _product = product;
 
-      // Call update method to send product to API.
-      update();
+      String url = getApiUrl('/${_product.id}');
+      // TODO: Add an custom exception trait.
+      await http.patch(url, body: _product.toJson());
 
       // Cleanup current _product.
       _product = null;
@@ -109,12 +80,17 @@ class ProductsProvider extends Provider {
     notifyListeners();
   }
 
-  Future<void> deleteProduct(Product product) async {
+  Future<void> delete(Product product) async {
     try {
       _product = product;
 
-      // Call update method to send product to API.
-      delete();
+      String url = getApiUrl('/${_product.id}');
+
+      final response = await http.delete(url);
+
+      if (response.statusCode >= 400) {
+        throw new Exception(response);
+      }
 
       // Remove product from List<Product>.
       _items.remove(_product);
@@ -127,4 +103,13 @@ class ProductsProvider extends Provider {
 
     notifyListeners();
   }
+
+  Product find(String id) {
+    return _items.firstWhere((product) => product.id == id);
+  }
+
+  List<Product> get items => _items;
+
+  List<Product> get desiredItems =>
+      _items.where((product) => product.isDesired).toList();
 }

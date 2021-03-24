@@ -53,8 +53,8 @@ class _OrderItemState extends State<OrderItem> {
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   CartItem order = widget.order.items[index];
-                  Product product = productProvider
-                      .findById(widget.order.items[index].productId);
+                  Product product =
+                      productProvider.find(widget.order.items[index].productId);
                   return Column(
                     children: <Widget>[
                       Row(
