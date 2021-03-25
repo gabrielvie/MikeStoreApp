@@ -1,25 +1,64 @@
-// Flutter imports.
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// App imports.
+import 'package:mikestore/models/product.dart';
 import 'package:mikestore/providers/products.dart';
+import 'package:mikestore/providers/user.dart';
 import 'package:mikestore/widgets/app_drawer.dart';
 
-class ProductsDetailsScreen extends StatelessWidget {
+class ProductsDetailsScreen extends StatefulWidget {
   static const String routeName = '/product-details';
 
   @override
-  Widget build(BuildContext context) {
-    final productId = ModalRoute.of(context).settings.arguments as String;
-    final product = Provider.of<ProductsProvider>(
-      context,
-      listen: false,
-    ).findById(productId);
+  _ProductsDetailsScreenState createState() => _ProductsDetailsScreenState();
+}
 
+class _ProductsDetailsScreenState extends State<ProductsDetailsScreen> {
+  ProductsProvider productsProvider;
+  UserProvider userProvider;
+
+  Product _product;
+  bool _isFavorite = false;
+
+  @override
+  void didChangeDependencies() {
+    productsProvider = Provider.of(context, listen: false);
+    userProvider = Provider.of(context);
+
+    String productId = ModalRoute.of(context).settings.arguments;
+    _product = productsProvider.find(productId);
+
+    setState(() {
+      _isFavorite = userProvider.isFavorite(_product);
+    });
+
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(product.title),
+        title: Text(_product.title),
+        actions: <Widget>[
+          IconButton(
+            icon: _isFavorite
+                ? Icon(
+                    Icons.favorite,
+                    color: Colors.red,
+                  )
+                : Icon(
+                    Icons.favorite_outline,
+                    color: Colors.grey[350],
+                  ),
+            onPressed: () async {
+              await userProvider.addOrRemoveFavorite(_product);
+              setState(() {
+                _isFavorite = userProvider.isFavorite(_product);
+              });
+            },
+          ),
+        ],
       ),
       drawer: AppDrawer(),
       body: SingleChildScrollView(
@@ -29,13 +68,13 @@ class ProductsDetailsScreen extends StatelessWidget {
               height: 300,
               width: double.infinity,
               child: Image.network(
-                product.imageUrl,
+                _product.imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
             SizedBox(height: 10),
             Text(
-              '\$${product.price.toStringAsFixed(2)}',
+              '\$${_product.price.toStringAsFixed(2)}',
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.grey,
@@ -46,7 +85,7 @@ class ProductsDetailsScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               width: double.infinity,
               child: Text(
-                product.description,
+                _product.description,
                 textAlign: TextAlign.center,
                 softWrap: true,
               ),

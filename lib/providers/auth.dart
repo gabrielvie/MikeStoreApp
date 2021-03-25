@@ -1,9 +1,11 @@
+// Dart imports.
 import 'dart:convert';
 
+// Flutter imports.
 import 'package:http/http.dart' as http;
-import 'package:mikestore/models/user.dart';
 
 // App imports.
+import 'package:mikestore/models/user.dart';
 import 'package:mikestore/providers/provider.dart';
 import 'package:mikestore/utils/exeptions.dart';
 
@@ -27,9 +29,9 @@ class AuthProvider extends Provider {
     'expiresIn': null
   };
 
-  bool get isAuthenticated {
-    return token != null;
-  }
+  bool get isAuthenticated => token != null;
+
+  User get user => _user;
 
   String get token {
     if (_auth['expiresIn'] != null &&
@@ -45,6 +47,7 @@ class AuthProvider extends Provider {
     // Preparing data to send to the API Server.
     var mappedUser = _user.toMap();
     mappedUser.addAll({'returnSecureToken': true});
+    mappedUser.addAll({'password': _user.password});
 
     return mappedUser;
   }

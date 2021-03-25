@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:mikestore/providers/auth.dart';
 import 'package:mikestore/providers/cart.dart';
 import 'package:mikestore/providers/orders.dart';
+import 'package:mikestore/providers/user.dart';
 import 'package:mikestore/screens/auth.dart';
 import 'package:mikestore/screens/cart.dart';
 import 'package:mikestore/screens/orders.dart';
@@ -27,6 +28,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, UserProvider>(
+          create: (context) => UserProvider(),
+          update: (context, authProvider, userProvider) =>
+              userProvider.auth(authProvider),
+        ),
         ChangeNotifierProxyProvider<AuthProvider, ProductsProvider>(
           create: (context) => ProductsProvider(),
           update: (context, authProvider, productProvider) =>
