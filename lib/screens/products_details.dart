@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mikestore/screens/products_overview.dart';
 import 'package:provider/provider.dart';
 
 import 'package:mikestore/models/product.dart';
 import 'package:mikestore/providers/products.dart';
 import 'package:mikestore/providers/user.dart';
+import 'package:mikestore/utils/dialogs.dart';
 import 'package:mikestore/widgets/app_drawer.dart';
 
 class ProductsDetailsScreen extends StatefulWidget {
@@ -13,23 +15,28 @@ class ProductsDetailsScreen extends StatefulWidget {
   _ProductsDetailsScreenState createState() => _ProductsDetailsScreenState();
 }
 
-class _ProductsDetailsScreenState extends State<ProductsDetailsScreen> {
-  ProductsProvider productsProvider;
-  UserProvider userProvider;
+class _ProductsDetailsScreenState extends State<ProductsDetailsScreen>
+    with Dialogs {
+  ProductsProvider _productsProvider;
+  UserProvider _userProvider;
 
   Product _product;
   bool _isFavorite = false;
 
   @override
   void didChangeDependencies() {
-    productsProvider = Provider.of(context, listen: false);
-    userProvider = Provider.of(context);
+    _productsProvider = Provider.of(context, listen: false);
+    _userProvider = Provider.of(context, listen: false);
 
     String productId = ModalRoute.of(context).settings.arguments;
-    _product = productsProvider.find(productId);
+    _product = _productsProvider.find(productId);
 
-    setState(() {
-      _isFavorite = userProvider.isFavorite(_product);
+    _userProvider.fetch().then((_) {
+      setState(() {
+        _isFavorite = _userProvider.isFavorite(_product);
+      });
+    }).onError((error, stackTrace) {
+      showError(context, error.toString());
     });
 
     super.didChangeDependencies();
@@ -52,9 +59,9 @@ class _ProductsDetailsScreenState extends State<ProductsDetailsScreen> {
                     color: Colors.grey[350],
                   ),
             onPressed: () async {
-              await userProvider.addOrRemoveFavorite(_product);
+              await _userProvider.addOrRemoveFavorite(_product);
               setState(() {
-                _isFavorite = userProvider.isFavorite(_product);
+                _isFavorite = _userProvider.isFavorite(_product);
               });
             },
           ),
