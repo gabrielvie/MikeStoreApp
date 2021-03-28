@@ -1,5 +1,4 @@
 // Flutter imports.
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,12 +6,19 @@ import 'package:provider/provider.dart';
 import 'package:mikestore/models/product.dart';
 import 'package:mikestore/screens/products_details.dart';
 import 'package:mikestore/providers/cart.dart';
+import 'package:mikestore/providers/user.dart';
 
 class ProductItem extends StatelessWidget {
+  final Product product;
+
+  const ProductItem(
+    this.product, {
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context, listen: false);
-    // final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
@@ -48,11 +54,13 @@ class ProductItem extends StatelessWidget {
             product.title,
             textAlign: TextAlign.center,
           ),
-          trailing: IconButton(
-            icon: Icon(Icons.add_shopping_cart),
-            color: Theme.of(context).primaryColor,
-            onPressed: () => _addProductToCart(context, product),
-          ),
+          trailing: userProvider.isCreator(product)
+              ? null
+              : IconButton(
+                  icon: Icon(Icons.add_shopping_cart),
+                  color: Theme.of(context).primaryColor,
+                  onPressed: () => _addProductToCart(context, product),
+                ),
         ),
       ),
     );

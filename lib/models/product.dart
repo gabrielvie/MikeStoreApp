@@ -4,11 +4,13 @@ import 'dart:convert';
 // Flutter imports.
 import 'package:flutter/foundation.dart';
 
+// TODO: remove this change notifier.
 class Product with ChangeNotifier {
   String id;
   String title;
   String imageUrl;
   String description;
+  String creatorId;
   double price;
   bool isDesired;
 
@@ -17,6 +19,7 @@ class Product with ChangeNotifier {
     @required this.title,
     @required this.imageUrl,
     @required this.description,
+    @required this.creatorId,
     @required this.price,
     this.isDesired = false,
   });
@@ -34,6 +37,7 @@ class Product with ChangeNotifier {
       title: title ?? this.title,
       imageUrl: imageUrl ?? this.imageUrl,
       description: description ?? this.description,
+      creatorId: creatorId ?? this.creatorId,
       price: price ?? this.price,
       isDesired: isDesired ?? this.isDesired,
     );
@@ -44,6 +48,7 @@ class Product with ChangeNotifier {
       'title': title,
       'imageUrl': imageUrl,
       'description': description,
+      'creatorId': creatorId,
       'price': price,
       'isDesired': isDesired,
     };
@@ -57,6 +62,7 @@ class Product with ChangeNotifier {
       title: map['title'],
       imageUrl: map['imageUrl'],
       description: map['description'],
+      creatorId: map['creatorId'],
       price: map['price'],
       isDesired: map['isDesired'],
     );
@@ -66,6 +72,6 @@ class Product with ChangeNotifier {
 
   @override
   String toString() {
-    return 'Product(id: $id, title: $title, imageUrl: $imageUrl, description: $description, price: $price, isDesired: $isDesired)';
+    return 'Product(id: $id, title: $title, imageUrl: $imageUrl, description: $description, creatorId: $creatorId, price: $price, isDesired: $isDesired)';
   }
 }

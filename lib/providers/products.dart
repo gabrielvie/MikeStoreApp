@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 // App imports.
 import 'package:mikestore/models/product.dart';
+import 'package:mikestore/models/user.dart';
 import 'package:mikestore/providers/provider.dart';
 import 'package:mikestore/utils/exeptions.dart';
 
@@ -16,8 +17,13 @@ class ProductsProvider extends Provider {
 
   Product _product;
 
-  Future<void> fetch() async {
+  Future<void> fetch([bool filterByUser = false]) async {
     String url = getApiUrl();
+
+    if (filterByUser) {
+      User user = authProvider.user;
+      url += '&orderBy="creatorId"&equalTo="${user.id}"';
+    }
 
     final response = await http.get(url);
     final responseData = json.decode(response.body) as Map<String, dynamic>;

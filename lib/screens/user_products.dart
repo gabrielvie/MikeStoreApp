@@ -13,8 +13,6 @@ class UserProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productsProvider = Provider.of<ProductsProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Products'),
@@ -28,27 +26,44 @@ class UserProductsScreen extends StatelessWidget {
         ],
       ),
       drawer: AppDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: ListView.builder(
-            itemBuilder: (_, index) => Column(
-              children: <Widget>[
-                UserProductItem(
-                  product: productsProvider.items[index],
+      body: FutureBuilder(
+        future: _refreshProducts(context),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            case ConnectionState.done:
+              return RefreshIndicator(
+                onRefresh: () => _refreshProducts(context),
+                child: Consumer<ProductsProvider>(
+                  builder: (context, productsProvider, _) => Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ListView.builder(
+                      itemBuilder: (_, index) => Column(
+                        children: <Widget>[
+                          UserProductItem(
+                            product: productsProvider.items[index],
+                          ),
+                          Divider(),
+                        ],
+                      ),
+                      itemCount: productsProvider.items.length,
+                    ),
+                  ),
                 ),
-                Divider(),
-              ],
-            ),
-            itemCount: productsProvider.items.length,
-          ),
-        ),
+              );
+            default:
+              return Center(
+                child: const Text('There\'s somenting wrong with this app.'),
+              );
+          }
+        },
       ),
     );
   }
 
   Future<void> _refreshProducts(BuildContext context) async {
-    await Provider.of<ProductsProvider>(context).fetch();
+    await Provider.of<ProductsProvider>(context, listen: false).fetch(true);
   }
 }

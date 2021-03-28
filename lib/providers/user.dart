@@ -33,7 +33,9 @@ class UserProvider extends Provider {
       );
     }
 
-    _user.favorites = responseData['favorites'].cast<String>();
+    if (responseData != null) {
+      _user.favorites = responseData['favorites'].cast<String>();
+    }
 
     notifyListeners();
   }
@@ -52,4 +54,6 @@ class UserProvider extends Provider {
   }
 
   bool isFavorite(Product product) => _user.favorites.contains(product.id);
+
+  bool isCreator(Product product) => _user.id == product.creatorId;
 }
