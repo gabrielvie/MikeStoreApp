@@ -15,18 +15,6 @@ class CartItem {
     @required this.price,
   });
 
-  CartItem copyWith({
-    String productId,
-    int quantity,
-    double price,
-  }) {
-    return CartItem(
-      productId: productId ?? this.productId,
-      quantity: quantity ?? this.quantity,
-      price: price ?? this.price,
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'productId': productId,

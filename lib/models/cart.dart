@@ -13,16 +13,6 @@ class Cart {
     this.items,
   });
 
-  Cart copyWith({
-    String id,
-    List<CartItem> items,
-  }) {
-    return Cart(
-      id: id ?? this.id,
-      items: items ?? this.items,
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'id': id,

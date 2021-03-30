@@ -24,25 +24,6 @@ class Product with ChangeNotifier {
     this.isDesired = false,
   });
 
-  Product copyWith({
-    String id,
-    String title,
-    String imageUrl,
-    String description,
-    double price,
-    bool isDesired,
-  }) {
-    return Product(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      imageUrl: imageUrl ?? this.imageUrl,
-      description: description ?? this.description,
-      creatorId: creatorId ?? this.creatorId,
-      price: price ?? this.price,
-      isDesired: isDesired ?? this.isDesired,
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'title': title,

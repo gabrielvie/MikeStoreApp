@@ -20,20 +20,6 @@ class Order {
     @required this.dateTime,
   });
 
-  Order copyWith({
-    String id,
-    double amount,
-    List<CartItem> items,
-    DateTime dateTime,
-  }) {
-    return Order(
-      id: id ?? this.id,
-      amount: amount ?? this.amount,
-      items: items ?? this.items,
-      dateTime: dateTime ?? this.dateTime,
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'id': id,

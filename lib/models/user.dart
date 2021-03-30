@@ -15,20 +15,6 @@ class User {
     this.favorites,
   });
 
-  User copyWith({
-    String id,
-    String email,
-    String password,
-    List<String> favorites,
-  }) {
-    return User(
-      id: id ?? this.id,
-      email: email ?? this.email,
-      password: password ?? this.password,
-      favorites: favorites ?? this.favorites,
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'email': email,
