@@ -29,6 +29,7 @@ class _ProductsEditScreenState extends State<ProductsEditScreen> {
 
   Product _editedProduct = Product(
     id: null,
+    creatorId: null,
     title: '',
     imageUrl: '',
     description: '',

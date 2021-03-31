@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 
 // App imports.
 import 'package:mikestore/models/product.dart';
-import 'package:mikestore/models/user.dart';
 import 'package:mikestore/providers/provider.dart';
 import 'package:mikestore/utils/exeptions.dart';
 
@@ -46,6 +45,7 @@ class ProductsProvider extends Provider {
 
   Future<void> create(Product product) async {
     _product = product;
+    _product.creatorId = user.id;
 
     try {
       String url = getApiUrl();

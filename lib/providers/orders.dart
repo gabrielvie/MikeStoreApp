@@ -50,6 +50,7 @@ class OrdersProvider extends Provider {
   Future<void> addOrder(Cart cart) async {
     // Create Order object.
     _order = new Order(
+      ownerId: user.id,
       amount: cart.amount,
       items: cart.items,
       dateTime: DateTime.now(),
