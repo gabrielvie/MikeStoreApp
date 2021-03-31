@@ -21,7 +21,6 @@ class ProductsProvider extends Provider {
     String url = getApiUrl();
 
     if (filterByUser) {
-      User user = authProvider.user;
       url += '&orderBy="creatorId"&equalTo="${user.id}"';
     }
 

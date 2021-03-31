@@ -9,12 +9,14 @@ import 'package:mikestore/models/cart_item.dart';
 
 class Order {
   String id;
+  String ownerId;
   double amount;
   List<CartItem> items;
   DateTime dateTime;
 
   Order({
     this.id,
+    @required this.ownerId,
     @required this.amount,
     @required this.items,
     @required this.dateTime,
@@ -23,6 +25,7 @@ class Order {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'ownerId': ownerId,
       'amount': amount,
       'items': items?.map((x) => x?.toMap())?.toList(),
       'dateTime': dateTime?.millisecondsSinceEpoch,
@@ -34,6 +37,7 @@ class Order {
 
     return Order(
       id: map['id'],
+      ownerId: map['ownerId'],
       amount: map['amount'],
       items: List<CartItem>.from(map['items']?.map((x) => CartItem.fromMap(x))),
       dateTime: DateTime.fromMillisecondsSinceEpoch(map['dateTime']),
@@ -46,6 +50,6 @@ class Order {
 
   @override
   String toString() {
-    return 'Order(id: $id, amount: $amount, items: $items, dateTime: $dateTime)';
+    return 'Order(id: $id, ownerId: $ownerId, amount: $amount, items: $items, dateTime: $dateTime)';
   }
 }

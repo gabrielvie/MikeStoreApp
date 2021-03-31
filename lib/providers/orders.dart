@@ -18,6 +18,8 @@ class OrdersProvider extends Provider {
 
   Future<void> fetch() async {
     String url = getApiUrl();
+    url += '&orderBy="ownerId"&equalTo="${user.id}"';
+
     final response = await http.get(url);
     final responseData = json.decode(response.body) as Map<String, dynamic>;
 

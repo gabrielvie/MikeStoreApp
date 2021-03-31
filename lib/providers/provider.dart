@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+
+import 'package:mikestore/models/user.dart';
 import 'package:mikestore/providers/auth.dart';
 
 abstract class Provider with ChangeNotifier {
@@ -12,6 +14,8 @@ abstract class Provider with ChangeNotifier {
     this.authProvider = authProvider;
     return this;
   }
+
+  User get user => authProvider.user;
 
   String getApiUrl([String complement = '', withJson = true]) {
     String apiUrl = apiServerURL + resourceName;
